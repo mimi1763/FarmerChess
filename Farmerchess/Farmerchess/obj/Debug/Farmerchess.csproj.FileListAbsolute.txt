@@ -1,0 +1,13 @@
+C:\Users\groesland\Documents\_Development\Farmerchess\Farmerchess\bin\Debug\Farmerchess.exe.config
+C:\Users\groesland\Documents\_Development\Farmerchess\Farmerchess\bin\Debug\Farmerchess.exe
+C:\Users\groesland\Documents\_Development\Farmerchess\Farmerchess\bin\Debug\Farmerchess.pdb
+C:\Users\groesland\Documents\_Development\Farmerchess\Farmerchess\obj\Debug\MainWindow.g.cs
+C:\Users\groesland\Documents\_Development\Farmerchess\Farmerchess\obj\Debug\App.g.cs
+C:\Users\groesland\Documents\_Development\Farmerchess\Farmerchess\obj\Debug\Farmerchess_MarkupCompile.cache
+C:\Users\groesland\Documents\_Development\Farmerchess\Farmerchess\obj\Debug\Farmerchess_MarkupCompile.lref
+C:\Users\groesland\Documents\_Development\Farmerchess\Farmerchess\obj\Debug\MainWindow.baml
+C:\Users\groesland\Documents\_Development\Farmerchess\Farmerchess\obj\Debug\Farmerchess.g.resources
+C:\Users\groesland\Documents\_Development\Farmerchess\Farmerchess\obj\Debug\Farmerchess.Properties.Resources.resources
+C:\Users\groesland\Documents\_Development\Farmerchess\Farmerchess\obj\Debug\Farmerchess.csproj.GenerateResource.Cache
+C:\Users\groesland\Documents\_Development\Farmerchess\Farmerchess\obj\Debug\Farmerchess.exe
+C:\Users\groesland\Documents\_Development\Farmerchess\Farmerchess\obj\Debug\Farmerchess.pdb
