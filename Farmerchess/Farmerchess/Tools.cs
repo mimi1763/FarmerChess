@@ -13,44 +13,17 @@ namespace Farmerchess
         private static volatile Tools instance;
         private static object syncRoot = new Object();
 
-        public static string BlockCountX = "BlockCountX";
-        public static string BlockCountY = "BlockCountY";
-        public static string BlockSize = "BlockSize";
-        public static string LineThickness = "LineThickness";
-        public static string BgColour = "BgColour";
-        public static string OColour = "OColour";
-        public static string XColour = "XColour";
-        public static string GridColour = "GridColour";
+        public static readonly string SettingsKey_BlockCountX = "BlockCountX";
+        public static readonly string SettingsKey_BlockCountY = "BlockCountY";
+        public static readonly string SettingsKey_BlockSize = "BlockSize";
+        public static readonly string SettingsKey_LineThickness = "LineThickness";
+        public static readonly string SettingsKey_BgColour = "BgColour";
+        public static readonly string SettingsKey_OColour = "OColour";
+        public static readonly string SettingsKey_XColour = "XColour";
+        public static readonly string SettingsKey_GridColour = "GridColour";
 
         private Tools()
         {
-        }
-
-        public static string ReadSetting(string key)
-        {
-            try
-            {
-                var appSettings = ConfigurationManager.AppSettings;
-                return appSettings[key] ?? null;
-            }
-            catch (ConfigurationErrorsException)
-            {
-                Console.WriteLine("Error reading app settings");
-            }
-            return null;
-        }
-
-        public static SolidColorBrush GetBrush(string colourString)
-        {
-            var setting = ReadSetting(colourString);
-            ColorConverter converter = new ColorConverter();
-            object value = null;
-            try
-            {
-                value = converter.ConvertFromInvariantString(setting);
-            }
-            catch (Exception) {}
-            return value != null ? new SolidColorBrush((Color)value) : Brushes.Red;
         }
 
         public static Tools Instance
@@ -68,6 +41,40 @@ namespace Farmerchess
 
                 return instance;
             }
+        }
+
+        public static object ReadSetting(string key, bool isNumber = false)
+        {
+            try
+            {
+                var appSettings = ConfigurationManager.AppSettings;
+                var value = appSettings[key];
+                if (isNumber)
+                {
+                    int number;
+                    bool success = int.TryParse(value, out number);
+                    return success ? number : -1;
+                }
+                return value;
+            }
+            catch (ConfigurationErrorsException)
+            {
+                Console.WriteLine("Error reading app settings");
+            }
+            return null;
+        }
+
+        public static SolidColorBrush GetBrush(string colourString)
+        {
+            var setting = (string)ReadSetting(colourString);
+            ColorConverter converter = new ColorConverter();
+            object value = null;
+            try
+            {
+                value = converter.ConvertFromInvariantString(setting);
+            }
+            catch (Exception) {}
+            return value != null ? new SolidColorBrush((Color)value) : Brushes.Red;
         }
     }
 }

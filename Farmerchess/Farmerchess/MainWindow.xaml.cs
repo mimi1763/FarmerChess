@@ -20,16 +20,9 @@ namespace Farmerchess
 
         private void InitGui()
         {
-            int blocksX = 10;
-            int blocksY = 10;
-            int blockSize = 20;
-            bool success = int.TryParse(Tools.ReadSetting(Tools.BlockCountX), out blocksX);
-            success = int.TryParse(Tools.ReadSetting(Tools.BlockCountY), out blocksY);
-            success = int.TryParse(Tools.ReadSetting(Tools.BlockSize), out blockSize);            
-
-            if (!success)
-            {
-            }
+            int blocksX = (int)Tools.ReadSetting(Tools.SettingsKey_BlockCountX, true);
+            int blocksY = (int)Tools.ReadSetting(Tools.SettingsKey_BlockCountY, true);
+            int blockSize = (int)Tools.ReadSetting(Tools.SettingsKey_BlockSize, true);            
 
             _board = new Board(blocksX, blocksY, blockSize);
             var size = _board.GetWindowSize();

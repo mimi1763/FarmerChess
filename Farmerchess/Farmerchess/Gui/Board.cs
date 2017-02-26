@@ -12,7 +12,7 @@ namespace Farmerchess.Gui
 {
     class Board
     {
-        private Canvas _canvas;
+        private GameCanvas _canvas;
         private static int _blockCountX;
         private static int _blockCountY;
         private static int _blockSize;
@@ -26,7 +26,7 @@ namespace Farmerchess.Gui
         public int Width { get; private set; }
         public int Height { get; private set; }
 
-        public Canvas Canvas
+        public GameCanvas Canvas
         {
             get { return _canvas; }
             set { _canvas = value; }
@@ -45,27 +45,31 @@ namespace Farmerchess.Gui
         {
             Width = _blockCountX * _blockSize;
             Height = _blockCountY * _blockSize;
-            _bgColour = Tools.GetBrush(Tools.BgColour);
-            _gridColour = Tools.GetBrush(Tools.GridColour);
-            _oColour = Tools.GetBrush(Tools.OColour);
-            _xColour = Tools.GetBrush(Tools.XColour);
-            Canvas = new Canvas();
+            _bgColour = Tools.GetBrush(Tools.SettingsKey_BgColour);
+            _gridColour = Tools.GetBrush(Tools.SettingsKey_GridColour);
+            _oColour = Tools.GetBrush(Tools.SettingsKey_OColour);
+            _xColour = Tools.GetBrush(Tools.SettingsKey_XColour);
+            Canvas = new GameCanvas(_blockCountX, _blockCountY);
             Canvas.Width = Width;
             Canvas.Height = Height;
             Canvas.Background = _bgColour;
-            int lineThickness;
-            bool success = int.TryParse(Tools.ReadSetting(Tools.LineThickness), out lineThickness);
-            _lineThickness = success ? lineThickness : 1;
+            int thickness = (int)Tools.ReadSetting(Tools.SettingsKey_LineThickness, true);
+            _lineThickness = thickness < 0 ? 1 : thickness;
         }
 
         private void InitGrid()
         {
             _grid = new Cell[_blockCountX, _blockCountY];
+            int id = 0;
             for (var y = 0; y < _blockCountY; y++)
             {
                 for (var x = 0; x < _blockCountX; x++)
                 {
-                    _grid[x, y] = new Cell(x * _blockSize, y * _blockSize, 0);
+                    id = y * _blockCountX + x;
+                    _grid[x, y] = new Cell(x * _blockSize, y * _blockSize, 0, id);
+                    _grid[x, y].Rectangle = new Rect(_grid[x, y].PosX, _grid[x, y].PosY, _blockSize, _blockSize);
+                    _grid[x, y].RectGeo = new RectangleGeometry();
+                    _grid[x, y].RectGeo.Rect = _grid[x, y].Rectangle;
                 }
             }
         }
@@ -78,31 +82,30 @@ namespace Farmerchess.Gui
         {
             return new Size(Width + _blockSize, Height + 2 * _blockSize);
         }
+
         public void Draw()
         {
             int x, y;
-
-            //Clear the canvas.
-            Canvas.Children.Clear();
 
             for (y = 0; y < _blockCountY; y++)
             {
                 for (x = 0; x < _blockCountX; x++)
                 {
-                    var cell = _grid[x, y];
-                    var value = cell != null ? cell.Value : 0;
-                    if (cell != null)
-                    {
-                        var rect = new Path
-                        {
-                            Data = new RectangleGeometry(new Rect(cell.PosX, cell.PosY, _blockSize, _blockSize)),
-                            Stroke = _gridColour,
-                            StrokeThickness = _lineThickness,
-                            Fill = value > 0 ? _oColour : Brushes.Transparent
-                        };
-                        Canvas.Children.Add(rect);
-                    }
+                    DrawCell(_grid[x, y]);
                 }
+            }
+        }
+
+        public void DrawCell(Cell cell)
+        {
+            var value = cell != null ? cell.Value : 0;
+            var path = (Path)Canvas.Children[cell.Id]; //cell.GridY * _blockCountX + cell.GridX
+            if (cell != null)
+            {
+                path.Data = cell.RectGeo;
+                path.Stroke = _gridColour;
+                path.StrokeThickness = _lineThickness;
+                path.Fill = value > 0 ? _oColour : Brushes.Transparent;
             }
         }
 
