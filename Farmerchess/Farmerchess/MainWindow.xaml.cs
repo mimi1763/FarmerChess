@@ -33,9 +33,20 @@ namespace Farmerchess
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            ChangeCellAtMousePos(e);
+        }
+
+        private void Window_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            ChangeCellAtMousePos(e, true);
+        }
+
+        private void ChangeCellAtMousePos(MouseButtonEventArgs e, bool isRightButton = false)
+        {
             var position = e.MouseDevice.GetPosition(_board.Canvas);
-            _board.GetCell((int)position.X, (int)position.Y, 1);
-            _board.Draw();
+            int player = isRightButton ? (int)Board.Player.X : (int)Board.Player.O;
+            var cell = _board.GetCell((int)position.X, (int)position.Y, player);
+            _board.DrawCell(cell);
         }
     }
 }

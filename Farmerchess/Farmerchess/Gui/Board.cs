@@ -32,6 +32,12 @@ namespace Farmerchess.Gui
             set { _canvas = value; }
         }
 
+        public enum Player
+        {
+            O = 1,
+            X = 2
+        }
+
         public Board(int blockCountX, int blockCountY, int blockSize)
         {
             _blockCountX = blockCountX;
@@ -99,13 +105,18 @@ namespace Farmerchess.Gui
         public void DrawCell(Cell cell)
         {
             var value = cell != null ? cell.Value : 0;
-            var path = (Path)Canvas.Children[cell.Id]; //cell.GridY * _blockCountX + cell.GridX
+            var id = 0;
+            if (cell != null)
+            {
+                id = cell.Id < Canvas.Children.Count ? cell.Id : Canvas.Children.Count - 1;
+            }            
+            var path = (Path)Canvas.Children[id]; //cell.GridY * _blockCountX + cell.GridX
             if (cell != null)
             {
                 path.Data = cell.RectGeo;
                 path.Stroke = _gridColour;
                 path.StrokeThickness = _lineThickness;
-                path.Fill = value > 0 ? _oColour : Brushes.Transparent;
+                path.Fill = value > 0 ? value == (int)Player.O ? _oColour : _xColour : Brushes.Transparent;
             }
         }
 
