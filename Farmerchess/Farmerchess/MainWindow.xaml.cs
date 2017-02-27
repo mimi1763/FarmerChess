@@ -1,6 +1,7 @@
 ﻿using Farmerchess.Gui;
 using System.Windows;
 using System.Windows.Input;
+using System;
 
 namespace Farmerchess
 {
@@ -10,12 +11,19 @@ namespace Farmerchess
     public partial class MainWindow : Window
     {
         Board _board;
+        Game _game;
 
         public MainWindow()
         {
             InitializeComponent();
             InitGui();
+            InitGame();
             _board.Draw();
+        }
+
+        private void InitGame()
+        {
+            _game = new Game();
         }
 
         private void InitGui()

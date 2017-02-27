@@ -56,6 +56,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Game.cs" />
+    <Compile Include="BitGrid.cs" />
     <Compile Include="Gui\GameCanvas.cs" />
     <Compile Include="Tools.cs" />
     <Page Include="MainWindow.xaml">
