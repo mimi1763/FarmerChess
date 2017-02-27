@@ -36,7 +36,7 @@
             int dimX = (int)Tools.ReadSetting(Tools.SettingsKey_BlockCountX, true);
             int dimY = (int)Tools.ReadSetting(Tools.SettingsKey_BlockCountY, true);
             _bitGrid = new bool[dimX, dimY];
-            _bitGrid.ClearGrid();
+            ClearGrid();
         }
 
         public BitGrid Empty
