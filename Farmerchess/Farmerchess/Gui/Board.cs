@@ -18,6 +18,7 @@ namespace Farmerchess.Gui
         private static int _blockSize;
         private static int _lineThickness;
         private Cell[,] _grid;
+        private BitGrid _bitGrid;
         private SolidColorBrush _bgColour;
         private SolidColorBrush _gridColour;
         private SolidColorBrush _oColour;
@@ -34,17 +35,18 @@ namespace Farmerchess.Gui
 
         public enum Player
         {
-            O = 1,
-            X = 2
+            Empty = 0,
+            X = 1,
+            O = 2
         }
 
-        public Board(int blockCountX, int blockCountY, int blockSize)
+        public Board(int blockCountX, int blockCountY, int blockSize, bool useBitGrid = false)
         {
             _blockCountX = blockCountX;
             _blockCountY = blockCountY;
             _blockSize = blockSize;
             InitGui();
-            InitGrid();
+            InitGrid(useBitGrid);
         }
 
         private void InitGui()
@@ -63,16 +65,19 @@ namespace Farmerchess.Gui
             _lineThickness = thickness < 0 ? 1 : thickness;
         }
 
-        private void InitGrid()
+        private void InitGrid(bool useBitGrid)
         {
+            _bitGrid = new BitGrid(useBitGrid);
             _grid = new Cell[_blockCountX, _blockCountY];
             int id = 0;
+            var piece = Player.Empty;
             for (var y = 0; y < _blockCountY; y++)
             {
                 for (var x = 0; x < _blockCountX; x++)
                 {
                     id = y * _blockCountX + x;
-                    _grid[x, y] = new Cell(x * _blockSize, y * _blockSize, 0, id);
+                    piece = _bitGrid.GetGridPiece(x, y);
+                    _grid[x, y] = new Cell(x * _blockSize, y * _blockSize, (int)piece, id);
                     _grid[x, y].Rectangle = new Rect(_grid[x, y].PosX, _grid[x, y].PosY, _blockSize, _blockSize);
                     _grid[x, y].RectGeo = new RectangleGeometry();
                     _grid[x, y].RectGeo.Rect = _grid[x, y].Rectangle;
@@ -110,7 +115,7 @@ namespace Farmerchess.Gui
             {
                 id = cell.Id < Canvas.Children.Count ? cell.Id : Canvas.Children.Count - 1;
             }            
-            var path = (Path)Canvas.Children[id]; //cell.GridY * _blockCountX + cell.GridX
+            var path = (Path)Canvas.Children[id];
             if (cell != null)
             {
                 path.Data = cell.RectGeo;

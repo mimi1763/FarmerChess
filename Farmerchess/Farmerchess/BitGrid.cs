@@ -1,8 +1,11 @@
-﻿namespace Farmerchess
+﻿using Farmerchess.Gui;
+using System.Windows;
+
+namespace Farmerchess
 {
     internal class BitGrid
     {
-        private bool[,] _bitGrid;
+        private int[,] _bitGrid;
 
         /*
              -- -- -- -- --
@@ -25,23 +28,30 @@
             DIABF = A4,B8,C12,D16,E20 = bits 5,9,13,17,21 = 100010001000100010000 = 0x111110
         */
 
+        //Test grid 10x10
+        private static int[,] _testGrid= new int[,]  {  { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+                                                        { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 },
+                                                        { 0, 0, 1, 0, 0, 0, 0, 1, 0, 0 },
+                                                        { 0, 0, 0, 1, 0, 0, 1, 0, 0, 0 },
+                                                        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                                                        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                                                        { 0, 0, 0, 1, 0, 0, 1, 0, 0, 0 },
+                                                        { 0, 0, 1, 0, 0, 0, 0, 1, 0, 0 },
+                                                        { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 },
+                                                        { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 }};
+
         //Bit-filters
         private static readonly int HORI = 0x1F;
         private static readonly int VERT = 0x108421;
         private static readonly int DIAGB = 0x1041041; //DIAGonal as Backslash (\)
         private static readonly int DIAGF = 0x111110; //DIAGonal as Forwardslash (/)
 
-        public BitGrid()
+        public BitGrid(bool useTestGrid = false)
         {
             int dimX = (int)Tools.ReadSetting(Tools.SettingsKey_BlockCountX, true);
             int dimY = (int)Tools.ReadSetting(Tools.SettingsKey_BlockCountY, true);
-            _bitGrid = new bool[dimX, dimY];
-            ClearGrid();
-        }
-
-        public BitGrid Empty
-        {
-            get { return new BitGrid(); }
+            _bitGrid = useTestGrid ? _testGrid : new int[dimX, dimY];
+            //if (!useTestGrid) ClearGrid();
         }
 
         public void ClearGrid()
@@ -50,9 +60,25 @@
             {
                 for (var x = 0; x < _bitGrid.GetUpperBound(0); x++)
                 {
-                    _bitGrid[x, y] = false;
+                    _bitGrid[x, y] = 0;
                 }
             }
+        }
+
+        public Board.Player GetGridPiece(int x, int y)
+        {
+            switch (_bitGrid[x, y])
+            {
+                case 0:     return Board.Player.Empty;
+                case 1:     return Board.Player.X;
+                case 2:     return Board.Player.O;
+                default:    return Board.Player.Empty;
+            } 
+        }
+
+        public static Size TestGridSize
+        {
+            get { return new Size(_testGrid.GetUpperBound(0), _testGrid.GetUpperBound(1)); }
         }
     }
 }

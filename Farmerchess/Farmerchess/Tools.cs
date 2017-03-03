@@ -21,6 +21,7 @@ namespace Farmerchess
         public static readonly string SettingsKey_OColour = "OColour";
         public static readonly string SettingsKey_XColour = "XColour";
         public static readonly string SettingsKey_GridColour = "GridColour";
+        public static readonly string SettingsKey_UseTestGrid = "UseTestGrid";
 
         private Tools()
         {
@@ -74,7 +75,7 @@ namespace Farmerchess
                 value = converter.ConvertFromInvariantString(setting);
             }
             catch (Exception) {}
-            return value != null ? new SolidColorBrush((Color)value) : Brushes.Red;
+            return value != null ? new SolidColorBrush((Color)value) : Brushes.Black;
         }
     }
 }

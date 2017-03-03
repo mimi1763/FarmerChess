@@ -16,23 +16,36 @@ namespace Farmerchess
         public MainWindow()
         {
             InitializeComponent();
-            InitGui();
+            var useTestGrid = (int)Tools.ReadSetting(Tools.SettingsKey_UseTestGrid, true);
+            InitGui(useTestGrid > 0);
             InitGame();
             _board.Draw();
         }
 
         private void InitGame()
-        {
+        {           
             _game = new Game();
         }
 
-        private void InitGui()
+        private void InitGui(bool useTestGrid)
         {
-            int blocksX = (int)Tools.ReadSetting(Tools.SettingsKey_BlockCountX, true);
-            int blocksY = (int)Tools.ReadSetting(Tools.SettingsKey_BlockCountY, true);
-            int blockSize = (int)Tools.ReadSetting(Tools.SettingsKey_BlockSize, true);            
+            int blocksX;
+            int blocksY;
+            int blockSize = (int)Tools.ReadSetting(Tools.SettingsKey_BlockSize, true);
+            
+            if (useTestGrid)
+            {
+                var testGridSize = BitGrid.TestGridSize;
+                blocksX = (int)testGridSize.Width;
+                blocksY = (int)testGridSize.Height;
+            }
+            else
+            {
+                blocksX = (int)Tools.ReadSetting(Tools.SettingsKey_BlockCountX, true);
+                blocksY = (int)Tools.ReadSetting(Tools.SettingsKey_BlockCountY, true);
+            }       
 
-            _board = new Board(blocksX, blocksY, blockSize);
+            _board = new Board(blocksX, blocksY, blockSize, useTestGrid);
             var size = _board.GetWindowSize();
             this.Width = size.Width;
             this.Height = size.Height;
