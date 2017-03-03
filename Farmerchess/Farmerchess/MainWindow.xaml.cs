@@ -25,6 +25,7 @@ namespace Farmerchess
         private void InitGame()
         {           
             _game = new Game();
+            _game.Start();
         }
 
         private void InitGui(bool useTestGrid)

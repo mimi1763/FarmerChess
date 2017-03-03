@@ -51,7 +51,6 @@ namespace Farmerchess
             int dimX = (int)Tools.ReadSetting(Tools.SettingsKey_BlockCountX, true);
             int dimY = (int)Tools.ReadSetting(Tools.SettingsKey_BlockCountY, true);
             _bitGrid = useTestGrid ? _testGrid : new int[dimX, dimY];
-            //if (!useTestGrid) ClearGrid();
         }
 
         public void ClearGrid()
@@ -78,7 +77,7 @@ namespace Farmerchess
 
         public static Size TestGridSize
         {
-            get { return new Size(_testGrid.GetUpperBound(0), _testGrid.GetUpperBound(1)); }
+            get { return new Size(_testGrid.GetUpperBound(0) + 1, _testGrid.GetUpperBound(1) + 1); }
         }
     }
 }
