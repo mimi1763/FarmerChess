@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Farmerchess;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,6 +20,14 @@ namespace Farmerchess.Players
         public void Move()
         {
 
+        }
+
+        public Node<BitGrid> AlphaBetaMiniMax(Node<BitGrid> n)
+        {
+
+
+
+            return null;
         }
     }
 }

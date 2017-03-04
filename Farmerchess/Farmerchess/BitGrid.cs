@@ -1,4 +1,6 @@
 ﻿using Farmerchess.Gui;
+using System.Collections;
+using System.Collections.Generic;
 using System.Windows;
 
 namespace Farmerchess
@@ -6,6 +8,7 @@ namespace Farmerchess
     internal class BitGrid
     {
         private int[,] _bitGrid;
+        private List<BitArray> _bitList;
 
         /*
              -- -- -- -- --
@@ -51,6 +54,16 @@ namespace Farmerchess
             int dimX = (int)Tools.ReadSetting(Tools.SettingsKey_BlockCountX, true);
             int dimY = (int)Tools.ReadSetting(Tools.SettingsKey_BlockCountY, true);
             _bitGrid = useTestGrid ? _testGrid : new int[dimX, dimY];
+            _bitList = new List<BitArray>();
+            for (var y = 0; y < dimY; y++)
+            {
+                bool[] bits = new bool[dimX];
+                for (var x = 0; x < dimX; x++)
+                {
+                    bits[x] = GetGridPiece(x, y) == Board.Player.Empty ? false : GetGridPiece(x, y) == Board.Player.X ? true : true;
+                }
+                _bitList.Add(new BitArray(bits));
+            }
         }
 
         public void ClearGrid()
@@ -73,6 +86,28 @@ namespace Farmerchess
                 case 2:     return Board.Player.O;
                 default:    return Board.Player.Empty;
             } 
+        }
+
+        /// <summary>
+        /// This evaluation method needs lots of work!
+        /// </summary>
+        /// <returns></returns>
+        public int Evaluate()
+        {
+            int score = 0;
+            var horiBits = new BitArray(HORI);
+            var vertBits = new BitArray(VERT);
+            var diagbBits = new BitArray(DIAGB);
+            var diagfBits = new BitArray(DIAGF);
+            var testBits = horiBits.Or(vertBits.Or(diagbBits.Or(diagfBits)));
+            foreach (var bits in _bitList)
+            {
+                foreach (bool bit in bits.And(testBits))
+                {
+                    if (bit) score++;
+                }
+            }
+            return score;
         }
 
         public static Size TestGridSize

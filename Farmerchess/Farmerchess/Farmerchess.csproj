@@ -60,6 +60,7 @@
     <Compile Include="BitGrid.cs" />
     <Compile Include="GameTree.cs" />
     <Compile Include="Gui\GameCanvas.cs" />
+    <Compile Include="Node.cs" />
     <Compile Include="Players\IPlayer.cs" />
     <Compile Include="Players\MiniMaxPlayer.cs" />
     <Compile Include="Tools.cs" />
