@@ -9,6 +9,9 @@ namespace Farmerchess
     {
         private int[,] _bitGrid;
         private List<BitArray> _bitList;
+        
+        public int SizeX { get; private set; }
+        public int SizeY { get; private set; }
 
         /*
              -- -- -- -- --
@@ -51,16 +54,17 @@ namespace Farmerchess
 
         public BitGrid(bool useTestGrid = false)
         {
-            int dimX = (int)Tools.ReadSetting(Tools.SettingsKey_BlockCountX, true);
-            int dimY = (int)Tools.ReadSetting(Tools.SettingsKey_BlockCountY, true);
-            _bitGrid = useTestGrid ? _testGrid : new int[dimX, dimY];
+            SizeX = useTestGrid ? _testGrid.GetUpperBound(0) + 1 : (int)Tools.ReadSetting(Tools.SettingsKey_BlockCountX, true);
+            SizeY = useTestGrid ? _testGrid.GetUpperBound(1) + 1 : (int)Tools.ReadSetting(Tools.SettingsKey_BlockCountY, true);
+            
+            _bitGrid = useTestGrid ? _testGrid : new int[SizeX, SizeY];
             _bitList = new List<BitArray>();
-            for (var y = 0; y < dimY; y++)
+            for (var y = 0; y < SizeY; y++)
             {
-                bool[] bits = new bool[dimX];
-                for (var x = 0; x < dimX; x++)
+                bool[] bits = new bool[SizeX];
+                for (var x = 0; x < SizeX; x++)
                 {
-                    bits[x] = GetGridPiece(x, y) == Board.Player.Empty ? false : GetGridPiece(x, y) == Board.Player.X ? true : true;
+                    bits[x] = GetGridPiece(x, y) == Tools.Player.Empty ? false : GetGridPiece(x, y) == Tools.Player.X ? true : true;
                 }
                 _bitList.Add(new BitArray(bits));
             }
@@ -77,14 +81,14 @@ namespace Farmerchess
             }
         }
 
-        public Board.Player GetGridPiece(int x, int y)
+        public Tools.Player GetGridPiece(int x, int y)
         {
             switch (_bitGrid[x, y])
             {
-                case 0:     return Board.Player.Empty;
-                case 1:     return Board.Player.X;
-                case 2:     return Board.Player.O;
-                default:    return Board.Player.Empty;
+                case 0:     return Tools.Player.Empty;
+                case 1:     return Tools.Player.X;
+                case 2:     return Tools.Player.O;
+                default:    return Tools.Player.Empty;
             } 
         }
 

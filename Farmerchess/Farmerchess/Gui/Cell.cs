@@ -16,9 +16,6 @@ namespace Farmerchess.Gui
             PosY = posy;
             Value = value;
             Id = id;
-            //var blocksX = (int)Tools.ReadSetting(Tools.SettingsKey_BlockCountX, true);
-            //GridX = Id % blocksX;
-            //GridY = Id / blocksX;
         }
 
         public int Value { get; set; }
@@ -30,5 +27,7 @@ namespace Farmerchess.Gui
 
         public RectangleGeometry RectGeo { get; set; }
         public Rect Rectangle { get; set; }
+
+        public ImageSource Image { get; set; }
     }
 }

@@ -33,13 +33,6 @@ namespace Farmerchess.Gui
             set { _canvas = value; }
         }
 
-        public enum Player
-        {
-            Empty = 0,
-            X = 1,
-            O = 2
-        }
-
         public Board(int blockCountX, int blockCountY, int blockSize, bool useBitGrid = false)
         {
             _blockCountX = blockCountX;
@@ -70,7 +63,7 @@ namespace Farmerchess.Gui
             _bitGrid = new BitGrid(useBitGrid);
             _grid = new Cell[_blockCountX, _blockCountY];
             int id = 0;
-            var piece = Player.Empty;
+            var piece = Tools.Player.Empty;
             for (var y = 0; y < _blockCountY; y++)
             {
                 for (var x = 0; x < _blockCountX; x++)
@@ -121,7 +114,7 @@ namespace Farmerchess.Gui
                 path.Data = cell.RectGeo;
                 path.Stroke = _gridColour;
                 path.StrokeThickness = _lineThickness;
-                path.Fill = value > 0 ? value == (int)Player.O ? _oColour : _xColour : Brushes.Transparent;
+                path.Fill = value > 0 ? value == (int)Tools.Player.O ? _oColour : _xColour : Brushes.Transparent;
             }
         }
 

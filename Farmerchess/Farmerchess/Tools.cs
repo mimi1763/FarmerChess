@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using Farmerchess.Gui;
+using System.Windows.Media.Imaging;
 
 namespace Farmerchess
 {
@@ -21,10 +23,27 @@ namespace Farmerchess
         public static readonly string SettingsKey_OColour = "OColour";
         public static readonly string SettingsKey_XColour = "XColour";
         public static readonly string SettingsKey_GridColour = "GridColour";
+        public static readonly string SettingsKey_XImagePath = "XImagePath";
+        public static readonly string SettingsKey_OImagePath = "OImagePath";
         public static readonly string SettingsKey_UseTestGrid = "UseTestGrid";
+
+        public static ImageSource ImageX;
+        public static ImageSource ImageO;
 
         private Tools()
         {
+            LoadImages();
+        }
+
+        /// <summary>
+        /// Read more here: http://stackoverflow.com/questions/14336597/adding-image-objects-to-wpf-with-code
+        /// </summary>
+        private void LoadImages()
+        {
+            var pathX = (string)ReadSetting(SettingsKey_XImagePath);
+            var pathO = (string)ReadSetting(SettingsKey_OImagePath);
+            ImageX = new BitmapImage(new Uri(pathX));
+            ImageO = new BitmapImage(new Uri(pathO));
         }
 
         public static Tools Instance
@@ -42,6 +61,13 @@ namespace Farmerchess
 
                 return instance;
             }
+        }
+
+        public enum Player
+        {
+            Empty = 0,
+            X = 1,
+            O = 2
         }
 
         public static object ReadSetting(string key, bool isNumber = false)

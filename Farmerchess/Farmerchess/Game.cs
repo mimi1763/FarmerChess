@@ -12,6 +12,7 @@ namespace Farmerchess
         public static readonly int LEVELS = 10;
 
         private GameTree _gameTree;
+        public Tools.Player Turn { get; private set; }
 
         public Game()
         {
@@ -20,23 +21,28 @@ namespace Farmerchess
 
         public void Start()
         {
-            var playerTurn = Board.Player.X;
+            Turn = Tools.Player.X;
             bool hasWon = false;
 
             /*************************
              ***** Main Game Loop ****
              *************************/
-            while (!hasWon)
-            {
+            //while (!hasWon)
+            //{
 
 
-                playerTurn = SwapPlayer(playerTurn);
-            }
+            //    ChangeTurn();
+            //}
         }
 
-        private Board.Player SwapPlayer(Board.Player lastPlayer)
+        private Tools.Player SwapPlayer(Tools.Player lastPlayer)
         {
-            return lastPlayer == Board.Player.X ? Board.Player.O : Board.Player.X;
+            return lastPlayer == Tools.Player.X ? Tools.Player.O : Tools.Player.X;
+        }
+
+        public void ChangeTurn()
+        {
+            Turn = SwapPlayer(Turn);
         }
     }
 }

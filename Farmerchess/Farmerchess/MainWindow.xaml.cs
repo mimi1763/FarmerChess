@@ -2,6 +2,8 @@
 using System.Windows;
 using System.Windows.Input;
 using System;
+using System.Diagnostics;
+using System.Numerics;
 
 namespace Farmerchess
 {
@@ -25,7 +27,7 @@ namespace Farmerchess
         private void InitGame()
         {           
             _game = new Game();
-            _game.Start();
+            //_game.Start();
         }
 
         private void InitGui(bool useTestGrid)
@@ -58,17 +60,36 @@ namespace Farmerchess
             ChangeCellAtMousePos(e);
         }
 
-        private void Window_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        private void ChangeCellAtMousePos(MouseButtonEventArgs e)
         {
-            ChangeCellAtMousePos(e, true);
-        }
+            //CompareBigIntegerToLong();
 
-        private void ChangeCellAtMousePos(MouseButtonEventArgs e, bool isRightButton = false)
-        {
             var position = e.MouseDevice.GetPosition(_board.Canvas);
-            int player = isRightButton ? (int)Board.Player.X : (int)Board.Player.O;
+            int player = _game.Turn == Tools.Player.X ? (int)Tools.Player.X : (int)Tools.Player.O;
             var cell = _board.GetCell((int)position.X, (int)position.Y, player);
             _board.DrawCell(cell);
+            _game.ChangeTurn();
+        }
+
+        private void CompareBigIntegerToLong()
+        {
+            int bitSize = 40 * 40;
+            Stopwatch watch = new Stopwatch();
+            BigInteger bigInt = new BigInteger(bitSize);
+            long int64 = 1;
+            bigInt = 1;
+
+            watch.Start();
+            for (var i = 0; i < 64; i++)
+                int64 = int64 << 1;
+            watch.Stop();
+            Console.WriteLine("long took: {0} ms to complete.", watch.ElapsedMilliseconds);
+            watch.Reset();
+            watch.Start();
+            for (var i = 0; i < bitSize; i++)
+                bigInt = bigInt << 1;
+            watch.Stop();
+            Console.WriteLine("BigInteger took: {0} ms to complete.", watch.ElapsedMilliseconds);
         }
     }
 }
