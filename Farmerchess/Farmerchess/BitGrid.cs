@@ -8,13 +8,6 @@ namespace Farmerchess
 {
     internal class BitGrid
     {
-        private BigInteger _bitGrid;
-        
-        public int SizeX { get; private set; }
-        public int SizeY { get; private set; }
-
-        public Tools.Player Player { get; private set; }
-
         /* 
         (Rank, row)
                  -- -- -- -- --
@@ -63,17 +56,33 @@ namespace Farmerchess
             U64 noWeOne (U64 b) {return (b << 7) & notHFile;}
         */
 
+        private BigInteger _bitGrid;
+        public int SizeX { get; private set; }
+        public int SizeY { get; private set; }
+        public Tools.Player Player { get; private set; }
+
         //Test grid 10x10
-        private static int[,] _testGrid= new int[,]  {  { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-                                                        { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 },
-                                                        { 0, 0, 1, 0, 0, 0, 0, 1, 0, 0 },
-                                                        { 0, 0, 0, 1, 0, 0, 1, 0, 0, 0 },
-                                                        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                                                        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                                                        { 0, 0, 0, 1, 0, 0, 1, 0, 0, 0 },
-                                                        { 0, 0, 1, 0, 0, 0, 0, 1, 0, 0 },
-                                                        { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 },
-                                                        { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 }};
+        private static int[,] _testGridO = new int[,]  { { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+                                                         { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 },
+                                                         { 0, 0, 1, 0, 0, 0, 0, 1, 0, 0 },
+                                                         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                                                         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                                                         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                                                         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                                                         { 0, 0, 1, 0, 0, 0, 0, 1, 0, 0 },
+                                                         { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 },
+                                                         { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 }};
+
+        private static int[,] _testGridX = new int[,]  { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                                                         { 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
+                                                         { 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
+                                                         { 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
+                                                         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                                                         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                                                         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                                                         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                                                         { 0, 0, 0, 1, 1, 1, 0, 0, 0, 0 },
+                                                         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }};
 
         //Bit-filters  <------------------ PS: These values are wrong now! Fix!
         private static readonly int HORI = 0x1F;
@@ -85,29 +94,19 @@ namespace Farmerchess
         {
             Player = player;
 
-            SizeX = useTestGrid ? _testGrid.GetUpperBound(0) + 1 : (int)Tools.ReadSetting(Tools.SettingsKey_BlockCountX, true);
+            SizeX = useTestGrid ? _testGridO.GetUpperBound(0) + 1 : (int)Tools.ReadSetting(Tools.SettingsKey_BlockCountX, true);
             SizeY = SizeX; //Always square boards!
             
-            _bitGrid = useTestGrid ? ConvertFromIntArray(_testGrid) : new BigInteger(SizeX * SizeY);
-            _bitList = new List<BitArray>();
-            for (var y = 0; y < SizeY; y++)
-            {
-                bool[] bits = new bool[SizeX];
-                for (var x = 0; x < SizeX; x++)
-                {
-                    bits[x] = GetGridPiece(x, y) == Tools.Player.Empty ? false : GetGridPiece(x, y) == Tools.Player.X ? true : true;
-                }
-                _bitList.Add(new BitArray(bits));
-            }
+            _bitGrid = useTestGrid ? (player == Tools.Player.O ? ConvertFromIntArray(_testGridO) : ConvertFromIntArray(_testGridX)) : new BigInteger(SizeX * SizeY);
         }
 
         public BigInteger ConvertFromIntArray(int[,] intArray)
         {
             BigInteger bitGrid = new BigInteger((intArray.GetUpperBound(0) + 1) ^ 2);
 
+            int index = 0;
             for (var y = 0; y < SizeY; y++)
             {
-                bool[] bits = new bool[SizeX];
                 for (var x = 0; x < SizeX; x++)
                 {
                     bits[x] = GetGridPiece(x, y) == Tools.Player.Empty ? false : GetGridPiece(x, y) == Tools.Player.X ? true : true;
@@ -116,6 +115,16 @@ namespace Farmerchess
             }
 
             return bitGrid;
+        }
+
+        private void SetBit(ref BigInteger bitGrid, int bitPos, bool value = true)
+        {
+            bitGrid = value ? bitGrid | (1 << bitPos) : bitGrid & ~(1 << bitPos);
+        }
+
+        private bool GetBit(BigInteger bitGrid, int bitPos)
+        {
+            return (bitGrid & (1 << bitPos)) != 0;
         }
 
         public void ClearGrid()
