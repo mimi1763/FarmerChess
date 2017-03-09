@@ -61,6 +61,7 @@
     <Compile Include="BitGrid.cs" />
     <Compile Include="GameTree.cs" />
     <Compile Include="Gui\GameCanvas.cs" />
+    <Compile Include="Gui\GfxElement.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Players\IPlayer.cs" />
     <Compile Include="Players\MiniMaxPlayer.cs" />
@@ -111,8 +112,12 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Resource Include="Images\o.png" />
-    <Resource Include="Images\x.png" />
+    <Resource Include="Images\o.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\x.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

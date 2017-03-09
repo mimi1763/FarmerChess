@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Shapes;
 
@@ -12,7 +13,8 @@ namespace Farmerchess.Gui
     {
         public GameCanvas(int dimX, int dimY)
         {
-            this.Children.Capacity = dimX * dimY;
+            //this.Children.Capacity = dimX * dimY;
+
             for (var y = 0; y < dimY; y++)
             {
                 for (var x = 0; x < dimX; x++)
@@ -22,6 +24,11 @@ namespace Farmerchess.Gui
                     this.Children.Add(path);
                 }
             }
+        }
+
+        public void AddChild(UIElement child)
+        {
+            this.Children.Add(child);
         }
     }
 }
