@@ -18,7 +18,7 @@ namespace Farmerchess.Gui
         private static int _blockSize;
         private static int _lineThickness;
         private Cell[,] _grid;
-        private BitGrid _bitGrid;
+        private BitGrid[] _bitGrids;
         private SolidColorBrush _bgColour;
         private SolidColorBrush _gridColour;
         private SolidColorBrush _oColour;
@@ -39,7 +39,7 @@ namespace Farmerchess.Gui
             _blockCountY = blockCountY;
             _blockSize = blockSize;
             InitGui();
-            InitGrid(useBitGrid);
+            //InitGrids(useBitGrid);
         }
 
         private void InitGui()
@@ -58,25 +58,27 @@ namespace Farmerchess.Gui
             _lineThickness = thickness < 0 ? 1 : thickness;
         }
 
-        private void InitGrid(bool useBitGrid)
-        {
-            _bitGrid = new BitGrid(useBitGrid);
-            _grid = new Cell[_blockCountX, _blockCountY];
-            int id = 0;
-            var piece = Tools.Player.Empty;
-            for (var y = 0; y < _blockCountY; y++)
-            {
-                for (var x = 0; x < _blockCountX; x++)
-                {
-                    id = y * _blockCountX + x;
-                    piece = _bitGrid.GetGridPiece(x, y);
-                    _grid[x, y] = new Cell(x * _blockSize, y * _blockSize, (int)piece, id);
-                    _grid[x, y].Rectangle = new Rect(_grid[x, y].PosX, _grid[x, y].PosY, _blockSize, _blockSize);
-                    _grid[x, y].RectGeo = new RectangleGeometry();
-                    _grid[x, y].RectGeo.Rect = _grid[x, y].Rectangle;
-                }
-            }
-        }
+        //private void InitGrids(bool useBitGrid)
+        //{
+        //    _bitGrids[0] = new BitGrid(Tools.Player.X, useBitGrid);
+        //    _bitGrids[1] = new BitGrid(Tools.Player.O, useBitGrid);
+
+        //    _grid = new Cell[_blockCountX, _blockCountY];
+        //    int id = 0;
+        //    var piece = Tools.Player.Empty;
+        //    for (var y = 0; y < _blockCountY; y++)
+        //    {
+        //        for (var x = 0; x < _blockCountX; x++)
+        //        {
+        //            id = y * _blockCountX + x;
+        //            piece = _bitGrids[0].
+        //            _grid[x, y] = new Cell(x * _blockSize, y * _blockSize, (int)piece, id);
+        //            _grid[x, y].Rectangle = new Rect(_grid[x, y].PosX, _grid[x, y].PosY, _blockSize, _blockSize);
+        //            _grid[x, y].RectGeo = new RectangleGeometry();
+        //            _grid[x, y].RectGeo.Rect = _grid[x, y].Rectangle;
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// Returns the size for main window dimensions.

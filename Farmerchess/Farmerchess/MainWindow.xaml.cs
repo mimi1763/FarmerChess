@@ -13,6 +13,7 @@ namespace Farmerchess
     public partial class MainWindow : Window
     {
         Board _board;
+        BitGrid[] _bitGrids;
         Game _game;
 
         public MainWindow()
@@ -21,6 +22,7 @@ namespace Farmerchess
             var useTestGrid = (int)Tools.ReadSetting(Tools.SettingsKey_UseTestGrid, true);
             InitGui(useTestGrid > 0);
             InitGame();
+            InitGrids(useTestGrid > 0);
             _board.Draw();
         }
 
@@ -38,14 +40,11 @@ namespace Farmerchess
             
             if (useTestGrid)
             {
-                var testGridSize = BitGrid.TestGridSize;
-                blocksX = (int)testGridSize.Width;
-                blocksY = (int)testGridSize.Height;
+                blocksX = blocksY = BitGrid.TestGridSize;
             }
             else
             {
-                blocksX = (int)Tools.ReadSetting(Tools.SettingsKey_BlockCountX, true);
-                blocksY = (int)Tools.ReadSetting(Tools.SettingsKey_BlockCountY, true);
+                blocksX = blocksY = (int)Tools.ReadSetting(Tools.SettingsKey_BlockCountX, true);
             }       
 
             _board = new Board(blocksX, blocksY, blockSize, useTestGrid);
@@ -53,6 +52,28 @@ namespace Farmerchess
             this.Width = size.Width;
             this.Height = size.Height;
             this.Content = _board.Canvas;
+        }
+
+        private void InitGrids()
+        {
+            _bitGrids[0] = new BitGrid(Tools.Player.X, _board);
+            _bitGrids[1] = new BitGrid(Tools.Player.O, _board);
+
+            _grid = new Cell[_blockCountX, _blockCountY];
+            int id = 0;
+            var piece = Tools.Player.Empty;
+            for (var y = 0; y < _blockCountY; y++)
+            {
+                for (var x = 0; x < _blockCountX; x++)
+                {
+                    id = y * _blockCountX + x;
+                    piece = _bitGrids[0].
+                    _grid[x, y] = new Cell(x * _blockSize, y * _blockSize, (int)piece, id);
+                    _grid[x, y].Rectangle = new Rect(_grid[x, y].PosX, _grid[x, y].PosY, _blockSize, _blockSize);
+                    _grid[x, y].RectGeo = new RectangleGeometry();
+                    _grid[x, y].RectGeo.Rect = _grid[x, y].Rectangle;
+                }
+            }
         }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

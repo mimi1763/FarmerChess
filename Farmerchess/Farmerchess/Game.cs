@@ -1,4 +1,5 @@
 ﻿using Farmerchess.Gui;
+using Farmerchess.Players;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,11 +13,14 @@ namespace Farmerchess
         public static readonly int LEVELS = 10;
 
         private GameTree _gameTree;
+        IPlayer[] _players;
         public Tools.Player Turn { get; private set; }
 
         public Game()
         {
             _gameTree = new GameTree(LEVELS);
+            _players[0] = new Human(Tools.Player.X);
+            _players[1] = new MiniMaxAI(Tools.Player.O, ref _gameTree);
         }
 
         public void Start()

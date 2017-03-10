@@ -7,11 +7,16 @@ using System.Threading.Tasks;
 
 namespace Farmerchess.Players
 {
-    class MiniMaxPlayer : IPlayer
+    class MiniMaxAI : IPlayer
     {
         private GameTree _gameTree;
 
-        public MiniMaxPlayer(ref GameTree gameTree)
+        public Tools.Player Colour
+        {
+            get; private set;
+        }
+
+        public MiniMaxAI(Tools.Player colour, ref GameTree gameTree)
         {
             _gameTree = gameTree;
         }
@@ -24,8 +29,6 @@ namespace Farmerchess.Players
 
         public Node<BitGrid> AlphaBetaMiniMax(Node<BitGrid> n)
         {
-
-
 
             return null;
         }

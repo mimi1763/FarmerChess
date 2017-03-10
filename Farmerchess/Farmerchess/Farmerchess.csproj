@@ -63,8 +63,9 @@
     <Compile Include="Gui\GameCanvas.cs" />
     <Compile Include="Gui\GfxElement.cs" />
     <Compile Include="Node.cs" />
+    <Compile Include="Players\Human.cs" />
     <Compile Include="Players\IPlayer.cs" />
-    <Compile Include="Players\MiniMaxPlayer.cs" />
+    <Compile Include="Players\MiniMaxAI.cs" />
     <Compile Include="Tools.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

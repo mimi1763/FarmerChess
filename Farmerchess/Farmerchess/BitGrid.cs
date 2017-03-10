@@ -104,14 +104,14 @@ namespace Farmerchess
         {
             BigInteger bitGrid = new BigInteger((intArray.GetUpperBound(0) + 1) ^ 2);
 
-            int index = 0;
+            bool bit = false;
             for (var y = 0; y < SizeY; y++)
             {
                 for (var x = 0; x < SizeX; x++)
                 {
-                    bits[x] = GetGridPiece(x, y) == Tools.Player.Empty ? false : GetGridPiece(x, y) == Tools.Player.X ? true : true;
+                    bit = intArray[x, y] != (int)Tools.Player.Empty;
+                    SetBit(ref bitGrid, y * SizeY + x, bit);
                 }
-                _bitList.Add(new BitArray(bits));
             }
 
             return bitGrid;
@@ -127,26 +127,14 @@ namespace Farmerchess
             return (bitGrid & (1 << bitPos)) != 0;
         }
 
-        public void ClearGrid()
+        public int GetPlayerInt()
         {
-            for (var y = 0; y < _bitGrid.GetUpperBound(1); y++)
-            {
-                for (var x = 0; x < _bitGrid.GetUpperBound(0); x++)
-                {
-                    _bitGrid[x, y] = 0;
-                }
-            }
+            return (int)Player;
         }
 
-        public Tools.Player GetGridPiece(int x, int y)
+        public void ClearGrid()
         {
-            switch (_bitGrid[x, y])
-            {
-                case 0:     return Tools.Player.Empty;
-                case 1:     return Tools.Player.X;
-                case 2:     return Tools.Player.O;
-                default:    return Tools.Player.Empty;
-            } 
+            _bitGrid = 0;
         }
 
         /// <summary>
@@ -160,9 +148,9 @@ namespace Farmerchess
             return score;
         }
 
-        public static Size TestGridSize
+        public static int TestGridSize
         {
-            get { return new Size(_testGrid.GetUpperBound(0) + 1, _testGrid.GetUpperBound(1) + 1); }
+            get { return _testGridO.GetUpperBound(0) + 1; }
         }
     }
 }
