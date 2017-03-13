@@ -13,8 +13,6 @@ namespace Farmerchess.Gui
     class Board
     {
         private GameCanvas _canvas;
-        private static int _blockCountX;
-        private static int _blockCountY;
         private static int _blockSize;
         private static int _lineThickness;
         private Cell[,] _grid;
@@ -26,6 +24,8 @@ namespace Farmerchess.Gui
 
         public int Width { get; private set; }
         public int Height { get; private set; }
+        public int BlockCountX { get; private set; }
+        public int BlockCountY { get; private set; }
 
         public GameCanvas Canvas
         {
@@ -35,22 +35,22 @@ namespace Farmerchess.Gui
 
         public Board(int blockCountX, int blockCountY, int blockSize, bool useBitGrid = false)
         {
-            _blockCountX = blockCountX;
-            _blockCountY = blockCountY;
+            BlockCountX = blockCountX;
+            BlockCountY = blockCountY;
             _blockSize = blockSize;
             InitGui();
-            //InitGrids(useBitGrid);
+            InitGrids();
         }
 
         private void InitGui()
         {
-            Width = _blockCountX * _blockSize;
-            Height = _blockCountY * _blockSize;
+            Width = BlockCountX * _blockSize;
+            Height = BlockCountY * _blockSize;
             _bgColour = Tools.GetBrush(Tools.SettingsKey_BgColour);
             _gridColour = Tools.GetBrush(Tools.SettingsKey_GridColour);
             _oColour = Tools.GetBrush(Tools.SettingsKey_OColour);
             _xColour = Tools.GetBrush(Tools.SettingsKey_XColour);
-            Canvas = new GameCanvas(_blockCountX, _blockCountY);
+            Canvas = new GameCanvas(BlockCountX, BlockCountY);
             Canvas.Width = Width;
             Canvas.Height = Height;
             Canvas.Background = _bgColour;
@@ -58,27 +58,23 @@ namespace Farmerchess.Gui
             _lineThickness = thickness < 0 ? 1 : thickness;
         }
 
-        //private void InitGrids(bool useBitGrid)
-        //{
-        //    _bitGrids[0] = new BitGrid(Tools.Player.X, useBitGrid);
-        //    _bitGrids[1] = new BitGrid(Tools.Player.O, useBitGrid);
-
-        //    _grid = new Cell[_blockCountX, _blockCountY];
-        //    int id = 0;
-        //    var piece = Tools.Player.Empty;
-        //    for (var y = 0; y < _blockCountY; y++)
-        //    {
-        //        for (var x = 0; x < _blockCountX; x++)
-        //        {
-        //            id = y * _blockCountX + x;
-        //            piece = _bitGrids[0].
-        //            _grid[x, y] = new Cell(x * _blockSize, y * _blockSize, (int)piece, id);
-        //            _grid[x, y].Rectangle = new Rect(_grid[x, y].PosX, _grid[x, y].PosY, _blockSize, _blockSize);
-        //            _grid[x, y].RectGeo = new RectangleGeometry();
-        //            _grid[x, y].RectGeo.Rect = _grid[x, y].Rectangle;
-        //        }
-        //    }
-        //}
+        private void InitGrids()
+        {
+            _grid = new Cell[BlockCountX, BlockCountY];
+            int id = 0;
+            var piece = Tools.Player.Empty;
+            for (var y = 0; y < BlockCountY; y++)
+            {
+                for (var x = 0; x < BlockCountX; x++)
+                {
+                    id = y * BlockCountX + x;
+                    _grid[x, y] = new Cell(x * _blockSize, y * _blockSize, (int)piece, id);
+                    _grid[x, y].Rectangle = new Rect(_grid[x, y].PosX, _grid[x, y].PosY, _blockSize, _blockSize);
+                    _grid[x, y].RectGeo = new RectangleGeometry();
+                    _grid[x, y].RectGeo.Rect = _grid[x, y].Rectangle;
+                }
+            }
+        }
 
         /// <summary>
         /// Returns the size for main window dimensions.
@@ -93,9 +89,9 @@ namespace Farmerchess.Gui
         {
             int x, y;
 
-            for (y = 0; y < _blockCountY; y++)
+            for (y = 0; y < BlockCountY; y++)
             {
-                for (x = 0; x < _blockCountX; x++)
+                for (x = 0; x < BlockCountX; x++)
                 {
                     DrawCell(_grid[x, y]);
                 }
@@ -122,9 +118,9 @@ namespace Farmerchess.Gui
 
         public Cell GetCell(int posx, int posy, int value = -1)
         {
-            for (var y = 0; y < _blockCountY; y++)
+            for (var y = 0; y < BlockCountY; y++)
             {
-                for (var x = 0; x < _blockCountX; x++)
+                for (var x = 0; x < BlockCountX; x++)
                 {
                     if (posx > _grid[x, y].PosX && posx < _grid[x, y].PosX + _blockSize &&
                         posy > _grid[x, y].PosY && posy < _grid[x, y].PosY + _blockSize)

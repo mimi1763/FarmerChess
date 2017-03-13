@@ -17,6 +17,11 @@ namespace Farmerchess.Players
             get; private set;
         }
 
+        public BitGrid Grid
+        {
+            get; set;
+        }
+
         public void Move()
         {
         }

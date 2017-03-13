@@ -16,11 +16,15 @@ namespace Farmerchess.Players
             get; private set;
         }
 
+        public BitGrid Grid
+        {
+            get; set;
+        }
+
         public MiniMaxAI(Tools.Player colour, ref GameTree gameTree)
         {
             _gameTree = gameTree;
         }
-
 
         public void Move()
         {

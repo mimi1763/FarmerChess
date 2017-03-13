@@ -90,11 +90,11 @@ namespace Farmerchess
         private static readonly int DIAGB = 0x1041041; //DIAGonal as Backslash (\)
         private static readonly int DIAGF = 0x111110; //DIAGonal as Forwardslash (/)
 
-        public BitGrid(Tools.Player player, bool useTestGrid = false)
+        public BitGrid(Tools.Player player, Board board, bool useTestGrid = false)
         {
             Player = player;
 
-            SizeX = useTestGrid ? _testGridO.GetUpperBound(0) + 1 : (int)Tools.ReadSetting(Tools.SettingsKey_BlockCountX, true);
+            SizeX = board.BlockCountX;
             SizeY = SizeX; //Always square boards!
             
             _bitGrid = useTestGrid ? (player == Tools.Player.O ? ConvertFromIntArray(_testGridO) : ConvertFromIntArray(_testGridX)) : new BigInteger(SizeX * SizeY);
