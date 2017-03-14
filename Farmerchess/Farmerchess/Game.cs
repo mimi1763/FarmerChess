@@ -102,8 +102,12 @@ namespace Farmerchess
             Point position = mouse.GetPosition(_board.Canvas);
             int player = Turn == Tools.Player.X ? (int)Tools.Player.X : (int)Tools.Player.O;
             var cell = _board.GetCell((int)position.X, (int)position.Y, player);
-            _board.DrawCell(cell);
-            ChangeTurn();
+            if (cell != null)
+            {
+                _players[player - 1].Grid.SetBit(cell.Id, true);
+                _board.DrawCell(cell);
+                ChangeTurn();
+            }
         }
     }
 }

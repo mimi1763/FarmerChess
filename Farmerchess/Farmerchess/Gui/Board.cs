@@ -16,7 +16,6 @@ namespace Farmerchess.Gui
         private static int _blockSize;
         private static int _lineThickness;
         private Cell[,] _grid;
-        private BitGrid[] _bitGrids;
         private SolidColorBrush _bgColour;
         private SolidColorBrush _gridColour;
         private SolidColorBrush _oColour;
@@ -39,7 +38,7 @@ namespace Farmerchess.Gui
             BlockCountY = blockCountY;
             _blockSize = blockSize;
             InitGui();
-            InitGrids();
+            InitCellGrid();
         }
 
         private void InitGui()
@@ -58,7 +57,7 @@ namespace Farmerchess.Gui
             _lineThickness = thickness < 0 ? 1 : thickness;
         }
 
-        private void InitGrids()
+        private void InitCellGrid()
         {
             _grid = new Cell[BlockCountX, BlockCountY];
             int id = 0;

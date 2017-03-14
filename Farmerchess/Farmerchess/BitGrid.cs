@@ -147,14 +147,24 @@ namespace Farmerchess
             return bitGrid;
         }
 
-        private void SetBit(ref BigInteger bitGrid, int bitPos, bool value = true)
+        public void SetBit(ref BigInteger bitGrid, int bitPos, bool value = true)
         {
             bitGrid = value ? bitGrid | (1 << bitPos) : bitGrid & ~(1 << bitPos);
         }
 
-        private bool GetBit(BigInteger bitGrid, int bitPos)
+        public void SetBit(int bitPos, bool value = true)
+        {
+            SetBit(ref _bitGrid, bitPos, value);
+        }
+
+        public bool GetBit(BigInteger bitGrid, int bitPos)
         {
             return (bitGrid & (1 << bitPos)) != 0;
+        }
+
+        public bool GetBit(int bitPos)
+        {
+            return GetBit(_bitGrid, bitPos);
         }
 
         public int GetPlayerInt()
