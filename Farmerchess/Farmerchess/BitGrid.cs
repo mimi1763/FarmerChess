@@ -55,24 +55,6 @@ namespace Farmerchess
             U64 soWeOne (U64 b) {return (b >> 9) & notHFile;}
             U64 noWeOne (U64 b) {return (b << 7) & notHFile;}
 
-            Tests:
-
-            4 20 21 22 23 24
-            3 15 16 17 18 19
-            2 10 11 12 13 14
-            1  5  6  7  8  9
-            0  0  1  2  3  4
-               a  b  c  d  e
-
-            4  1  0  0  0  0
-            3  0  1  1  1  0
-            2  0  1  0  0  0
-            1  0  1  0  1  1
-            0  0  0  1  0  0
-               a  b  c  d  e
-
-            = 00001 01110 00010 11010 00100
-
             9 90 91 92 93 94 95 96 97 98 99
             8 80 81 82 83 84 85 86 87 88 89
             7 70 71 72 73 74 75 76 77 78 79
@@ -84,7 +66,65 @@ namespace Farmerchess
             1 10 11 12 13 14 15 16 17 18 19
             0  0  1  2  3  4  5  6  7  8  9
                a  b  c  d  e  f  g  h  i  j
+
+            Masks:
+
+            4 20 21 22 23 24
+            3 15 16 17 18 19
+            2 10 11 12 13 14
+            1  5  6  7  8  9
+            0  0  1  2  3  4
+               a  b  c  d  e
+
+            4  1  0  0  0  0
+            3  0  1  0  0  0
+            2  0  0  1  0  0
+            1  0  0  0  1  0
+            0  0  0  0  0  1
+               a  b  c  d  e
+
+            Diag slash-west
+            = 00001 00010 00100 01000 10000
+            Shift R:
+            = 00000 10000 01000 00100 00010
+
+            4  0  0  0  0  1
+            3  0  0  0  1  0
+            2  0  0  1  0  0
+            1  0  1  0  0  0
+            0  1  0  0  0  0
+               a  b  c  d  e
+
+            Diag slash-east
+            = 10000 01000 00100 00010 00001
+
+
+
+
         */
+        public enum BitFlags
+        {
+            One = 1,
+            Two = 2,
+            Three = 4,
+            Four = 8,
+            Five = 16,
+            Six = 32,
+            Seven = 64,
+            Eight = 128,
+            Nine = 256,
+            Ten = 512,
+            Eleven = 1024,
+            Twelve = 2048,
+            Thirteen = 4096,
+            Fourteen = 8192,
+            Fifteen = 16384,
+            Sixteen = 32768,
+            Seventeen = 65536,
+            Eighteen = 131072,
+            Nineteen = 262144,
+            Twenty = 524288
+        }
 
         private BigInteger _bitGrid;
         public int SizeX { get; private set; }
@@ -114,11 +154,7 @@ namespace Farmerchess
                                                          { 0, 0, 0, 1, 1, 1, 0, 0, 0, 0 },
                                                          { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }};
 
-        //Bit-filters  <------------------ PS: These values are wrong now! Fix!
-        private static readonly int HORI = 0x1F;
-        private static readonly int VERT = 0x108421;
-        private static readonly int DIAGB = 0x1041041; //DIAGonal as Backslash (\)
-        private static readonly int DIAGF = 0x111110; //DIAGonal as Forwardslash (/)
+
 
         public BitGrid(Tools.Player player, Board board, bool useTestGrid = false)
         {
@@ -177,11 +213,11 @@ namespace Farmerchess
             _bitGrid = 0;
         }
 
-        public bool CheckRows(int noInARow, int lastPosPlayed)
+        public bool CheckRow(int less, int lastPosPlayed)
         {
-            int row = lastPosPlayed / SizeY; 
-            // bit positions = row * sizeY -> row * sizeY + sizeX
+            int row = lastPosPlayed / SizeY;
 
+            // bit positions = row * sizeY -> row * sizeY + sizeX
 
             return false;
         }

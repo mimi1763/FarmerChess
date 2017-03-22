@@ -9,8 +9,6 @@ namespace Farmerchess.Players
 {
     class MiniMaxAI : IPlayer
     {
-        private GameTree _gameTree;
-
         public Tools.Player Colour
         {
             get; private set;
@@ -21,9 +19,8 @@ namespace Farmerchess.Players
             get; set;
         }
 
-        public MiniMaxAI(Tools.Player colour, ref GameTree gameTree)
+        public MiniMaxAI(Tools.Player colour)
         {
-            _gameTree = gameTree;
         }
 
         public void Move()

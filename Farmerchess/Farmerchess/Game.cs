@@ -14,7 +14,6 @@ namespace Farmerchess
     {
         public static readonly int LEVELS = 10;
 
-        private GameTree _gameTree;
         List<IPlayer> _players;
         Board _board;
 
@@ -27,9 +26,8 @@ namespace Farmerchess
         public Game()
         {
             _players = new List<IPlayer>();
-            _gameTree = new GameTree(LEVELS);
             _players.Add(new Human(Tools.Player.X));
-            _players.Add(new MiniMaxAI(Tools.Player.O, ref _gameTree));           
+            _players.Add(new MiniMaxAI(Tools.Player.O));           
             InitGame();
         }
 
