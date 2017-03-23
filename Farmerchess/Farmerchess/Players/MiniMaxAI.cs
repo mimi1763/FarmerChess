@@ -14,7 +14,7 @@ namespace Farmerchess.Players
             get; private set;
         }
 
-        public BitGrid Grid
+        public IPlayerGrid Grid
         {
             get; set;
         }
@@ -28,7 +28,7 @@ namespace Farmerchess.Players
 
         }
 
-        public Node<BitGrid> AlphaBetaMiniMax(Node<BitGrid> n)
+        public Node<FieldGrid> AlphaBetaMiniMax(Node<FieldGrid> n)
         {
 
             return null;

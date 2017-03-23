@@ -17,7 +17,7 @@ namespace Farmerchess.Players
             get; private set;
         }
 
-        public BitGrid Grid
+        public IPlayerGrid Grid
         {
             get; set;
         }

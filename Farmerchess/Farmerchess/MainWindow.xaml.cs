@@ -17,7 +17,7 @@ namespace Farmerchess
         public MainWindow()
         {
             InitializeComponent();
-            var useTestGrid = (int)Tools.ReadSetting(Tools.SettingsKey_UseTestGrid, true);
+            var useTestGrid = (int)Tools.ReadSetting(Tools.Instance.SettingsKey_UseTestGrid, true);
             InitGame();
             _game.Draw();
         }

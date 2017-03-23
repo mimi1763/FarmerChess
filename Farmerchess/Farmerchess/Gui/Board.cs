@@ -45,15 +45,15 @@ namespace Farmerchess.Gui
         {
             Width = BlockCountX * _blockSize;
             Height = BlockCountY * _blockSize;
-            _bgColour = Tools.GetBrush(Tools.SettingsKey_BgColour);
-            _gridColour = Tools.GetBrush(Tools.SettingsKey_GridColour);
-            _oColour = Tools.GetBrush(Tools.SettingsKey_OColour);
-            _xColour = Tools.GetBrush(Tools.SettingsKey_XColour);
+            _bgColour = Tools.GetBrush(Tools.Instance.SettingsKey_BgColour);
+            _gridColour = Tools.GetBrush(Tools.Instance.SettingsKey_GridColour);
+            _oColour = Tools.GetBrush(Tools.Instance.SettingsKey_OColour);
+            _xColour = Tools.GetBrush(Tools.Instance.SettingsKey_XColour);
             Canvas = new GameCanvas(BlockCountX, BlockCountY);
             Canvas.Width = Width;
             Canvas.Height = Height;
             Canvas.Background = _bgColour;
-            int thickness = (int)Tools.ReadSetting(Tools.SettingsKey_LineThickness, true);
+            int thickness = (int)Tools.ReadSetting(Tools.Instance.SettingsKey_LineThickness, true);
             _lineThickness = thickness < 0 ? 1 : thickness;
         }
 
@@ -104,7 +104,7 @@ namespace Farmerchess.Gui
             if (cell != null)
             {
                 id = cell.Id < Canvas.Children.Count ? cell.Id : Canvas.Children.Count - 1;
-            }            
+            }   
             var path = (Path)Canvas.Children[id];
             if (cell != null)
             {
@@ -115,6 +115,13 @@ namespace Farmerchess.Gui
             }
         }
 
+        /// <summary>
+        /// Gets gui board cell at mouse position.
+        /// </summary>
+        /// <param name="posx"></param>
+        /// <param name="posy"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public Cell GetCell(int posx, int posy, int value = -1)
         {
             for (var y = 0; y < BlockCountY; y++)

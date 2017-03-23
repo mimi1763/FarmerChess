@@ -13,7 +13,7 @@ namespace Farmerchess.Gui
     {
         public GameCanvas(int dimX, int dimY)
         {
-            //this.Children.Capacity = dimX * dimY;
+            this.Children.Capacity = dimX * dimY;
 
             for (var y = 0; y < dimY; y++)
             {

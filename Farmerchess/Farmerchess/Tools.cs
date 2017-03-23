@@ -15,34 +15,34 @@ namespace Farmerchess
         private static volatile Tools instance;
         private static object syncRoot = new Object();
 
-        public static readonly string SettingsKey_BlockCountX = "BlockCountX";
-        public static readonly string SettingsKey_BlockCountY = "BlockCountY";
-        public static readonly string SettingsKey_BlockSize = "BlockSize";
-        public static readonly string SettingsKey_LineThickness = "LineThickness";
-        public static readonly string SettingsKey_BgColour = "BgColour";
-        public static readonly string SettingsKey_OColour = "OColour";
-        public static readonly string SettingsKey_XColour = "XColour";
-        public static readonly string SettingsKey_GridColour = "GridColour";
-        public static readonly string SettingsKey_XImagePath = "XImagePath";
-        public static readonly string SettingsKey_OImagePath = "OImagePath";
-        public static readonly string SettingsKey_UseTestGrid = "UseTestGrid";
+        public readonly string SettingsKey_BlockCountX = "BlockCountX";
+        public readonly string SettingsKey_BlockCountY = "BlockCountY";
+        public readonly string SettingsKey_BlockSize = "BlockSize";
+        public readonly string SettingsKey_LineThickness = "LineThickness";
+        public readonly string SettingsKey_BgColour = "BgColour";
+        public readonly string SettingsKey_OColour = "OColour";
+        public readonly string SettingsKey_XColour = "XColour";
+        public readonly string SettingsKey_GridColour = "GridColour";
+        public readonly string SettingsKey_XImagePath = "XImagePath";
+        public readonly string SettingsKey_OImagePath = "OImagePath";
+        public readonly string SettingsKey_UseTestGrid = "UseTestGrid";
 
-        public static ImageSource ImageX;
-        public static ImageSource ImageO;
+        public ImageSource ImageX;
+        public ImageSource ImageO;
 
         //Test grid 10x10
-        public static int[,] TestGridO = new int[,]  { { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+        public int[,] TestGridO = new int[,]  { { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
                                                          { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 },
                                                          { 0, 0, 1, 0, 0, 0, 0, 1, 0, 0 },
                                                          { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                                                         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                                                         { 0, 0, 0, 0, 0, 0, 1, 1, 1, 0 },
                                                          { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                                                          { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                                                          { 0, 0, 1, 0, 0, 0, 0, 1, 0, 0 },
                                                          { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 },
                                                          { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 }};
 
-        public static int[,] TestGridX = new int[,]  { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+        public int[,] TestGridX = new int[,]  { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                                                          { 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
                                                          { 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
                                                          { 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
@@ -55,7 +55,7 @@ namespace Farmerchess
 
         private Tools()
         {
-            LoadImages();
+            //LoadImages();
         }
 
         /// <summary>

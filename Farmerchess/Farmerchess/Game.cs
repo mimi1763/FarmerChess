@@ -12,7 +12,7 @@ namespace Farmerchess
 {
     class Game
     {
-        public static readonly int LEVELS = 10;
+        public static readonly int LEVELS = 4;
 
         List<IPlayer> _players;
         Board _board;
@@ -33,9 +33,9 @@ namespace Farmerchess
 
         private void InitGame()
         {
-            var useTestGrid = (int)Tools.ReadSetting(Tools.SettingsKey_UseTestGrid, true);
+            var useTestGrid = (int)Tools.ReadSetting(Tools.Instance.SettingsKey_UseTestGrid, true);
             InitGui(useTestGrid > 0);
-            InitBitGrids();
+            InitPlayerGrids(useTestGrid > 0);
             _board.Draw();
             //_game.Start();
         }
@@ -70,7 +70,7 @@ namespace Farmerchess
         {
             int blocksX;
             int blocksY;
-            int blockSize = (int)Tools.ReadSetting(Tools.SettingsKey_BlockSize, true);
+            int blockSize = (int)Tools.ReadSetting(Tools.Instance.SettingsKey_BlockSize, true);
 
             if (useTestGrid)
             {
@@ -78,7 +78,7 @@ namespace Farmerchess
             }
             else
             {
-                blocksX = blocksY = (int)Tools.ReadSetting(Tools.SettingsKey_BlockCountX, true);
+                blocksX = blocksY = (int)Tools.ReadSetting(Tools.Instance.SettingsKey_BlockCountX, true);
             }
 
             _board = new Board(blocksX, blocksY, blockSize, useTestGrid);
@@ -89,10 +89,16 @@ namespace Farmerchess
             _board.Draw();
         }
 
-        private void InitBitGrids()
+        private void InitPlayerGrids(bool useTestGrid)
         {
-            _players[0].Grid = new BitGrid(Tools.Player.X, _board);
-            _players[1].Grid = new BitGrid(Tools.Player.O, _board);
+            _players[0].Grid = new FieldGrid(_board.BlockCountX);
+            _players[1].Grid = new FieldGrid(_board.BlockCountX);
+
+            if (useTestGrid)
+            {
+                _players[0].Grid.ConvertFromIntArray(_players[0].Colour == Tools.Player.O ? Tools.Instance.TestGridO : Tools.Instance.TestGridX);
+                _players[1].Grid.ConvertFromIntArray(_players[1].Colour == Tools.Player.X ? Tools.Instance.TestGridX : Tools.Instance.TestGridO);
+            }
         }
 
         public void ChangeCellAtMousePos(MouseDevice mouse)
@@ -102,8 +108,14 @@ namespace Farmerchess
             var cell = _board.GetCell((int)position.X, (int)position.Y, player);
             if (cell != null)
             {
-                _players[player - 1].Grid.SetBit(cell.Id, true);
+                //Debug
+                Console.WriteLine(cell.Id);
+                _players[player - 1].Grid.SetCell(cell.Id, true);
                 _board.DrawCell(cell);
+                //Debug
+                Console.WriteLine(_players[player - 1].Grid.ToString());
+                var array = _players[player - 1].Grid.GetSlashDiagArray(cell.Id);
+                Console.WriteLine(_players[player - 1].Grid.PrintArray(array));
                 ChangeTurn();
             }
         }

@@ -58,10 +58,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BitLine.cs" />
+    <Compile Include="FieldGrid.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="BitGrid.cs" />
     <Compile Include="Gui\GameCanvas.cs" />
     <Compile Include="Gui\GfxElement.cs" />
+    <Compile Include="IPlayerGrid.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Players\Human.cs" />
     <Compile Include="Players\IPlayer.cs" />
