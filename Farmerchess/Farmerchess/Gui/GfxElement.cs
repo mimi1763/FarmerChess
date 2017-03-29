@@ -37,7 +37,7 @@ namespace Farmerchess.Gui
         {
             //Canvas.SetLeft(_image, rnd.NextDouble() * maxX);
             //Canvas.SetTop(_image, rnd.NextDouble() * maxY);
-            canvas.AddChild(_image);
+            canvas.AddGridChild(_image);
         }
     }
 }

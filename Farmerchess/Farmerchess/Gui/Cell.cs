@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace Farmerchess.Gui
 {
@@ -27,7 +28,7 @@ namespace Farmerchess.Gui
 
         public RectangleGeometry RectGeo { get; set; }
         public Rect Rectangle { get; set; }
-
+        public Rectangle ImgRectangle { get; set; }
         public ImageSource Image { get; set; }
     }
 }

@@ -27,8 +27,8 @@ namespace Farmerchess
         public readonly string SettingsKey_OImagePath = "OImagePath";
         public readonly string SettingsKey_UseTestGrid = "UseTestGrid";
 
-        public ImageSource ImageX;
-        public ImageSource ImageO;
+        public static ImageSource ImageX { get; private set; }
+        public static ImageSource ImageO { get; private set; }
 
         //Test grid 10x10
         public int[,] TestGridO = new int[,]  { { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
@@ -55,7 +55,7 @@ namespace Farmerchess
 
         private Tools()
         {
-            //LoadImages();
+            LoadImages();
         }
 
         /// <summary>
@@ -63,10 +63,18 @@ namespace Farmerchess
         /// </summary>
         private void LoadImages()
         {
-            var pathX = (string)ReadSetting(SettingsKey_XImagePath);
-            var pathO = (string)ReadSetting(SettingsKey_OImagePath);
-            ImageX = new BitmapImage(new Uri(pathX));
-            ImageO = new BitmapImage(new Uri(pathO));
+            try
+            {
+                var pathX = (string)ReadSetting(SettingsKey_XImagePath);
+                var pathO = (string)ReadSetting(SettingsKey_OImagePath);
+
+                ImageX = BitmapFrame.Create(new Uri(pathX, UriKind.RelativeOrAbsolute));
+                ImageO = BitmapFrame.Create(new Uri(pathO, UriKind.RelativeOrAbsolute));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
         }
 
         public static Tools Instance
@@ -123,8 +131,13 @@ namespace Farmerchess
             {
                 value = converter.ConvertFromInvariantString(setting);
             }
-            catch (Exception) {}
+            catch (Exception) { }
             return value != null ? new SolidColorBrush((Color)value) : Brushes.Black;
+        }
+
+        public static ImageBrush GetImageBrush(int player)
+        {
+            return player == (int)Player.O ? new ImageBrush(ImageO) : new ImageBrush(ImageX);
         }
     }
 }

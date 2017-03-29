@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -15,7 +16,7 @@ namespace Farmerchess.Gui
         private GameCanvas _canvas;
         private static int _blockSize;
         private static int _lineThickness;
-        private Cell[,] _grid;
+        private Cell[,] _cellGrid;
         private SolidColorBrush _bgColour;
         private SolidColorBrush _gridColour;
         private SolidColorBrush _oColour;
@@ -29,7 +30,7 @@ namespace Farmerchess.Gui
         public GameCanvas Canvas
         {
             get { return _canvas; }
-            set { _canvas = value; }
+            //set { _canvas = value; }
         }
 
         public Board(int blockCountX, int blockCountY, int blockSize, bool useBitGrid = false)
@@ -49,17 +50,19 @@ namespace Farmerchess.Gui
             _gridColour = Tools.GetBrush(Tools.Instance.SettingsKey_GridColour);
             _oColour = Tools.GetBrush(Tools.Instance.SettingsKey_OColour);
             _xColour = Tools.GetBrush(Tools.Instance.SettingsKey_XColour);
-            Canvas = new GameCanvas(BlockCountX, BlockCountY);
-            Canvas.Width = Width;
-            Canvas.Height = Height;
-            Canvas.Background = _bgColour;
+            _canvas = new GameCanvas(BlockCountX, BlockCountY, _blockSize);
+            _canvas.SetGridSize(Width, Height);
+            _canvas.Width = Width * 1.5;
+            _canvas.Height = Height * 1.5;
+            _canvas.Complete();
+            //_canvas.GridCanvas.Background = _bgColour;
             int thickness = (int)Tools.ReadSetting(Tools.Instance.SettingsKey_LineThickness, true);
             _lineThickness = thickness < 0 ? 1 : thickness;
         }
 
         private void InitCellGrid()
         {
-            _grid = new Cell[BlockCountX, BlockCountY];
+            _cellGrid = new Cell[BlockCountX, BlockCountY];
             int id = 0;
             var piece = Tools.Player.Empty;
             for (var y = 0; y < BlockCountY; y++)
@@ -67,10 +70,27 @@ namespace Farmerchess.Gui
                 for (var x = 0; x < BlockCountX; x++)
                 {
                     id = y * BlockCountX + x;
-                    _grid[x, y] = new Cell(x * _blockSize, y * _blockSize, (int)piece, id);
-                    _grid[x, y].Rectangle = new Rect(_grid[x, y].PosX, _grid[x, y].PosY, _blockSize, _blockSize);
-                    _grid[x, y].RectGeo = new RectangleGeometry();
-                    _grid[x, y].RectGeo.Rect = _grid[x, y].Rectangle;
+                    _cellGrid[x, y] = new Cell(x * _blockSize, y * _blockSize, (int)piece, id);
+                    _cellGrid[x, y].ImgRectangle = new Rectangle();
+                    _cellGrid[x, y].Rectangle = new Rect(_cellGrid[x, y].PosX, _cellGrid[x, y].PosY, _blockSize, _blockSize);
+                    _cellGrid[x, y].RectGeo = new RectangleGeometry(_cellGrid[x, y].Rectangle);
+                }
+            }
+        }
+
+        private void ClearGrid(object sender, RoutedEventArgs e)
+        {
+            Rectangle rectangle;
+            for (int y = 0; y < BlockCountY; y++)
+            {
+                for (int x = 0; x < BlockCountX; x++)
+                {
+                    _cellGrid[x, y].Value = (int)Tools.Player.Empty;
+                    rectangle = (Rectangle)Canvas.GetGridChild(y * BlockCountY + x);
+                    if (rectangle != null)
+                    {
+                        rectangle.Fill = Brushes.Transparent;
+                    }
                 }
             }
         }
@@ -84,34 +104,43 @@ namespace Farmerchess.Gui
             return new Size(Width + _blockSize, Height + 2 * _blockSize);
         }
 
+        /// <summary>
+        /// Draw entire board 
+        /// </summary>
         public void Draw()
         {
-            int x, y;
-
-            for (y = 0; y < BlockCountY; y++)
+            for (int y = 0; y < BlockCountY; y++)
             {
-                for (x = 0; x < BlockCountX; x++)
+                for (int x = 0; x < BlockCountX; x++)
                 {
-                    DrawCell(_grid[x, y]);
+                    DrawCell(_cellGrid[x, y]);
                 }
             }
         }
 
+        /// <summary>
+        /// Draw single cell
+        /// </summary>
+        /// <param name="cell"></param>
         public void DrawCell(Cell cell)
         {
             var value = cell != null ? cell.Value : 0;
             var id = 0;
             if (cell != null)
             {
-                id = cell.Id < Canvas.Children.Count ? cell.Id : Canvas.Children.Count - 1;
-            }   
-            var path = (Path)Canvas.Children[id];
+                id = cell.Id < Canvas.GridCanvas.Children.Count ? cell.Id : Canvas.GridCanvas.Children.Count - 1;
+            }
+            var imgRect = (Rectangle)Canvas.GetGridChild(id);
             if (cell != null)
             {
-                path.Data = cell.RectGeo;
-                path.Stroke = _gridColour;
-                path.StrokeThickness = _lineThickness;
-                path.Fill = value > 0 ? value == (int)Tools.Player.O ? _oColour : _xColour : Brushes.Transparent;
+                if (value > 0)
+                {
+                    imgRect.Fill = Tools.GetImageBrush(value);
+                }
+                else
+                {
+                    imgRect.Fill = Brushes.Transparent;
+                }
             }
         }
 
@@ -128,14 +157,14 @@ namespace Farmerchess.Gui
             {
                 for (var x = 0; x < BlockCountX; x++)
                 {
-                    if (posx > _grid[x, y].PosX && posx < _grid[x, y].PosX + _blockSize &&
-                        posy > _grid[x, y].PosY && posy < _grid[x, y].PosY + _blockSize)
+                    if (posx > _cellGrid[x, y].PosX && posx < _cellGrid[x, y].PosX + _blockSize &&
+                        posy > _cellGrid[x, y].PosY && posy < _cellGrid[x, y].PosY + _blockSize)
                     {
                         if (value > -1)
                         {
-                            _grid[x, y].Value = Math.Abs(value - _grid[x, y].Value);
+                            _cellGrid[x, y].Value = Math.Abs(value - _cellGrid[x, y].Value);
                         }
-                        return _grid[x, y];
+                        return _cellGrid[x, y];
                     }
                 }
             }
