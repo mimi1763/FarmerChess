@@ -17,7 +17,9 @@ namespace Farmerchess.Gui
         public GameCanvas(int dimX, int dimY, int blockSize)
         {
             _gridCanvas = new Canvas();
-            _gridCanvas.Background = CreateGridBackground();
+            _gridCanvas.Background = CreateGridBackground(dimX, dimY, blockSize);
+            //Canvas.SetLeft(_gridCanvas, 50);
+            //Canvas.SetTop(_gridCanvas, 50);
             this.Children.Add(_gridCanvas);
 
             for (var y = 0; y < dimY; y++)
@@ -30,6 +32,11 @@ namespace Farmerchess.Gui
                     _gridCanvas.Children.Add(rectangle);
                 }
             }
+        }
+
+        public GameCanvas(GameCanvas canvasToCopy)
+        {
+            _gridCanvas = new Canvas(canvasToCopy._gridCanvas);
         }
 
         public Canvas GridCanvas
@@ -53,24 +60,29 @@ namespace Farmerchess.Gui
             _gridCanvas.Children.Add(child);
         }
 
-        public DrawingBrush CreateGridBackground()
+        private DrawingBrush CreateGridBackground(int dimX, int dimY, int blockSize)
         {
-            var drawingBrush = new DrawingBrush();
-      
-            var rect = new Rect(0, 0, 40, 40);
+            var drawingBrush = new DrawingBrush();    
+            var rect = new Rect(0, 0, blockSize, blockSize);
             var geoDrawing = new GeometryDrawing();
+            var geoDrawingBg = new GeometryDrawing();
             var rectGeo = new RectangleGeometry();
+            var drawingGrp = new DrawingGroup();
             var pen = new Pen();
             rectGeo.Rect = rect;
-            geoDrawing.Geometry = rectGeo;
-            pen.Brush = Brushes.Black;
-            pen.Thickness = 2;
+            geoDrawing.Geometry = geoDrawingBg.Geometry = rectGeo;
+            pen.Brush = Tools.Instance.GetBrush(Tools.Instance.SettingsKey_GridColour);
+            pen.Thickness = (int)Tools.Instance.ReadSetting(Tools.Instance.SettingsKey_LineThickness);
             geoDrawing.Pen = pen;
+            geoDrawingBg.Brush = Tools.Instance.GetBrush(Tools.Instance.SettingsKey_BgColour);
             drawingBrush.TileMode = TileMode.Tile;
             drawingBrush.Viewport = rect;
             drawingBrush.ViewportUnits = BrushMappingMode.Absolute;
-            drawingBrush.Drawing = geoDrawing;
-
+            //Add drawing geos to drawing group
+            drawingGrp.Children.Add(geoDrawingBg);
+            drawingGrp.Children.Add(geoDrawing);
+            //Set drawing brush's geometry as the drawing group
+            drawingBrush.Drawing = drawingGrp;
             return drawingBrush;
         }
 

@@ -17,7 +17,7 @@ namespace Farmerchess
         public MainWindow()
         {
             InitializeComponent();
-            var useTestGrid = (int)Tools.ReadSetting(Tools.Instance.SettingsKey_UseTestGrid, true);
+            var useTestGrid = (int)Tools.Instance.ReadSetting(Tools.Instance.SettingsKey_UseTestGrid);
             InitGame();
             _game.Draw();
         }
@@ -25,12 +25,9 @@ namespace Farmerchess
         private void InitGame()
         {           
             _game = new Game();
-            var size = _game.GameWindowSize;
-            this.Content = _game.Canvas;
-            this.Width = size.Width;
-            this.Height = size.Height;
-
-            //_game.Start();
+            this.Content = _game.CanvasList[0];
+            this.Width = _game.GameWindowSize.Width;
+            this.Height = _game.GameWindowSize.Height;
         }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

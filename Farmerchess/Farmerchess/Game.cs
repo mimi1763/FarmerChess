@@ -16,8 +16,9 @@ namespace Farmerchess
 
         List<IPlayer> _players;
         Board _board;
+        private bool _isDebug;
 
-        public GameCanvas Canvas { get { return _board.Canvas; } }
+        public List<GameCanvas> CanvasList { get; private set; }
 
         public Size GameWindowSize { get { return _board.GetWindowSize(); } }
 
@@ -29,31 +30,21 @@ namespace Farmerchess
             _players.Add(new Human(Tools.Player.X));
             _players.Add(new MiniMaxAI(Tools.Player.O));           
             InitGame();
+            _isDebug = (int)Tools.Instance.ReadSetting(Tools.Instance.SettingsKey_DebugMode) == 1;
+            if (_isDebug)
+            {
+                InitDebugWindow();
+            }
         }
 
         private void InitGame()
         {
-            var useTestGrid = (int)Tools.ReadSetting(Tools.Instance.SettingsKey_UseTestGrid, true);
+            var useTestGrid = (int)Tools.Instance.ReadSetting(Tools.Instance.SettingsKey_UseTestGrid);
             InitGui(useTestGrid > 0);
             InitPlayerGrids(useTestGrid > 0);
+            CanvasList = new List<GameCanvas>();
+            CanvasList.Add(_board.Canvas);
             _board.Draw();
-            //_game.Start();
-        }
-
-        public void Start()
-        {
-            Turn = Tools.Player.X;
-            bool hasWon = false;
-
-            /*************************
-             ***** Main Game Loop ****
-             *************************/
-            //while (!hasWon)
-            //{
-
-
-            //    ChangeTurn();
-            //}
         }
 
         private Tools.Player SwapPlayer(Tools.Player lastPlayer)
@@ -70,7 +61,7 @@ namespace Farmerchess
         {
             int blocksX;
             int blocksY;
-            int blockSize = (int)Tools.ReadSetting(Tools.Instance.SettingsKey_BlockSize, true);
+            int blockSize = (int)Tools.Instance.ReadSetting(Tools.Instance.SettingsKey_BlockSize);
 
             if (useTestGrid)
             {
@@ -78,7 +69,7 @@ namespace Farmerchess
             }
             else
             {
-                blocksX = blocksY = (int)Tools.ReadSetting(Tools.Instance.SettingsKey_BlockCountX, true);
+                blocksX = blocksY = (int)Tools.Instance.ReadSetting(Tools.Instance.SettingsKey_BlockCountX);
             }
 
             _board = new Board(blocksX, blocksY, blockSize, useTestGrid);
@@ -108,16 +99,24 @@ namespace Farmerchess
             var cell = _board.GetCell((int)position.X, (int)position.Y, player);
             if (cell != null)
             {
-                //Debug
-                Console.WriteLine(cell.Id);
                 _players[player - 1].Grid.SetCell(cell.Id, true);
                 _board.DrawCell(cell);
-                //Debug
-                Console.WriteLine(_players[player - 1].Grid.ToString());
-                var array = _players[player - 1].Grid.GetSlashDiagArray(cell.Id);
-                Console.WriteLine(_players[player - 1].Grid.PrintArray(array));
+
+                if (_isDebug)
+                {
+                    Console.WriteLine(cell.Id);
+                    Console.WriteLine(_players[player - 1].Grid.ToString());
+                    var array = _players[player - 1].Grid.GetSlashDiagArray(cell.Id);
+                    Console.WriteLine(_players[player - 1].Grid.PrintArray(array));
+                }
+
                 ChangeTurn();
             }
+        }
+
+        private void InitDebugWindow()
+        {
+            var debugBoard = new Board(_board);
         }
     }
 }

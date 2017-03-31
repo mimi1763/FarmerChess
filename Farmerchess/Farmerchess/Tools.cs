@@ -15,20 +15,19 @@ namespace Farmerchess
         private static volatile Tools instance;
         private static object syncRoot = new Object();
 
-        public readonly string SettingsKey_BlockCountX = "BlockCountX";
-        public readonly string SettingsKey_BlockCountY = "BlockCountY";
-        public readonly string SettingsKey_BlockSize = "BlockSize";
-        public readonly string SettingsKey_LineThickness = "LineThickness";
+        public readonly string SettingsKey_BlockCountX = "nbrBlockCountX";
+        public readonly string SettingsKey_BlockCountY = "nbrBlockCountY";
+        public readonly string SettingsKey_BlockSize = "nbrBlockSize";
+        public readonly string SettingsKey_LineThickness = "nbrLineThickness";
         public readonly string SettingsKey_BgColour = "BgColour";
-        public readonly string SettingsKey_OColour = "OColour";
-        public readonly string SettingsKey_XColour = "XColour";
         public readonly string SettingsKey_GridColour = "GridColour";
         public readonly string SettingsKey_XImagePath = "XImagePath";
         public readonly string SettingsKey_OImagePath = "OImagePath";
-        public readonly string SettingsKey_UseTestGrid = "UseTestGrid";
+        public readonly string SettingsKey_UseTestGrid = "nbrUseTestGrid";
+        public readonly string SettingsKey_DebugMode = "nbrDebugMode";
 
-        public static ImageSource ImageX { get; private set; }
-        public static ImageSource ImageO { get; private set; }
+        public static ImageBrush ImageX { get; private set; }
+        public static ImageBrush ImageO { get; private set; }
 
         //Test grid 10x10
         public int[,] TestGridO = new int[,]  { { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
@@ -65,11 +64,14 @@ namespace Farmerchess
         {
             try
             {
+                var blockSize = (int)ReadSetting(SettingsKey_BlockSize);
                 var pathX = (string)ReadSetting(SettingsKey_XImagePath);
                 var pathO = (string)ReadSetting(SettingsKey_OImagePath);
-
-                ImageX = BitmapFrame.Create(new Uri(pathX, UriKind.RelativeOrAbsolute));
-                ImageO = BitmapFrame.Create(new Uri(pathO, UriKind.RelativeOrAbsolute));
+                var imageSrcX = BitmapFrame.Create(new Uri(pathX, UriKind.RelativeOrAbsolute));
+                var imageSrcO = BitmapFrame.Create(new Uri(pathO, UriKind.RelativeOrAbsolute));
+                //double scale = imageSrcO.Width / blockSize;
+                ImageX = new ImageBrush(imageSrcX);
+                ImageO = new ImageBrush(imageSrcO);
             }
             catch (Exception e)
             {
@@ -101,10 +103,11 @@ namespace Farmerchess
             O = 2
         }
 
-        public static object ReadSetting(string key, bool isNumber = false)
+        public object ReadSetting(string key)
         {
             try
             {
+                var isNumber = key.Contains("nbr");
                 var appSettings = ConfigurationManager.AppSettings;
                 var value = appSettings[key];
                 if (isNumber)
@@ -122,7 +125,7 @@ namespace Farmerchess
             return null;
         }
 
-        public static SolidColorBrush GetBrush(string colourString)
+        public SolidColorBrush GetBrush(string colourString)
         {
             var setting = (string)ReadSetting(colourString);
             ColorConverter converter = new ColorConverter();
@@ -135,9 +138,9 @@ namespace Farmerchess
             return value != null ? new SolidColorBrush((Color)value) : Brushes.Black;
         }
 
-        public static ImageBrush GetImageBrush(int player)
+        public ImageBrush GetImageBrush(int player)
         {
-            return player == (int)Player.O ? new ImageBrush(ImageO) : new ImageBrush(ImageX);
+            return player == (int)Player.O ? ImageO : ImageX;
         }
     }
 }

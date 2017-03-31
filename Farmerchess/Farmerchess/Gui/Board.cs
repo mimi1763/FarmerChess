@@ -14,50 +14,45 @@ namespace Farmerchess.Gui
     class Board
     {
         private GameCanvas _canvas;
-        private static int _blockSize;
-        private static int _lineThickness;
         private Cell[,] _cellGrid;
-        private SolidColorBrush _bgColour;
-        private SolidColorBrush _gridColour;
-        private SolidColorBrush _oColour;
-        private SolidColorBrush _xColour;
 
         public int Width { get; private set; }
         public int Height { get; private set; }
         public int BlockCountX { get; private set; }
         public int BlockCountY { get; private set; }
+        public int BlockSize { get; private set; }
 
         public GameCanvas Canvas
         {
             get { return _canvas; }
-            //set { _canvas = value; }
         }
 
         public Board(int blockCountX, int blockCountY, int blockSize, bool useBitGrid = false)
         {
             BlockCountX = blockCountX;
             BlockCountY = blockCountY;
-            _blockSize = blockSize;
+            BlockSize = blockSize;
             InitGui();
             InitCellGrid();
         }
 
+        public Board(Board boardToCopy)
+        {
+            BlockCountX = boardToCopy.BlockCountX;
+            BlockCountY = boardToCopy.BlockCountY;
+            BlockSize = boardToCopy.BlockSize;
+            _canvas = new GameCanvas(boardToCopy.Canvas);
+        }
+
         private void InitGui()
         {
-            Width = BlockCountX * _blockSize;
-            Height = BlockCountY * _blockSize;
-            _bgColour = Tools.GetBrush(Tools.Instance.SettingsKey_BgColour);
-            _gridColour = Tools.GetBrush(Tools.Instance.SettingsKey_GridColour);
-            _oColour = Tools.GetBrush(Tools.Instance.SettingsKey_OColour);
-            _xColour = Tools.GetBrush(Tools.Instance.SettingsKey_XColour);
-            _canvas = new GameCanvas(BlockCountX, BlockCountY, _blockSize);
+            Width = BlockCountX * BlockSize;
+            Height = BlockCountY * BlockSize;
+            _canvas = new GameCanvas(BlockCountX, BlockCountY, BlockSize);
             _canvas.SetGridSize(Width, Height);
             _canvas.Width = Width * 1.5;
             _canvas.Height = Height * 1.5;
-            _canvas.Complete();
-            //_canvas.GridCanvas.Background = _bgColour;
-            int thickness = (int)Tools.ReadSetting(Tools.Instance.SettingsKey_LineThickness, true);
-            _lineThickness = thickness < 0 ? 1 : thickness;
+            //_canvas.Complete();
         }
 
         private void InitCellGrid()
@@ -70,9 +65,9 @@ namespace Farmerchess.Gui
                 for (var x = 0; x < BlockCountX; x++)
                 {
                     id = y * BlockCountX + x;
-                    _cellGrid[x, y] = new Cell(x * _blockSize, y * _blockSize, (int)piece, id);
+                    _cellGrid[x, y] = new Cell(x * BlockSize, y * BlockSize, (int)piece, id);
                     _cellGrid[x, y].ImgRectangle = new Rectangle();
-                    _cellGrid[x, y].Rectangle = new Rect(_cellGrid[x, y].PosX, _cellGrid[x, y].PosY, _blockSize, _blockSize);
+                    _cellGrid[x, y].Rectangle = new Rect(_cellGrid[x, y].PosX, _cellGrid[x, y].PosY, BlockSize, BlockSize);
                     _cellGrid[x, y].RectGeo = new RectangleGeometry(_cellGrid[x, y].Rectangle);
                 }
             }
@@ -101,7 +96,7 @@ namespace Farmerchess.Gui
         /// <returns></returns>
         public Size GetWindowSize()
         {
-            return new Size(Width + _blockSize, Height + 2 * _blockSize);
+            return new Size(Width + BlockSize, Height + 2 * BlockSize);
         }
 
         /// <summary>
@@ -135,7 +130,7 @@ namespace Farmerchess.Gui
             {
                 if (value > 0)
                 {
-                    imgRect.Fill = Tools.GetImageBrush(value);
+                    imgRect.Fill = Tools.Instance.GetImageBrush(value);
                 }
                 else
                 {
@@ -157,8 +152,8 @@ namespace Farmerchess.Gui
             {
                 for (var x = 0; x < BlockCountX; x++)
                 {
-                    if (posx > _cellGrid[x, y].PosX && posx < _cellGrid[x, y].PosX + _blockSize &&
-                        posy > _cellGrid[x, y].PosY && posy < _cellGrid[x, y].PosY + _blockSize)
+                    if (posx > _cellGrid[x, y].PosX && posx < _cellGrid[x, y].PosX + BlockSize &&
+                        posy > _cellGrid[x, y].PosY && posy < _cellGrid[x, y].PosY + BlockSize)
                     {
                         if (value > -1)
                         {
