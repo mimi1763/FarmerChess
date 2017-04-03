@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Xml;
 
 namespace Farmerchess.Gui
 {
@@ -34,9 +37,34 @@ namespace Farmerchess.Gui
             }
         }
 
-        public GameCanvas(GameCanvas canvasToCopy)
+        //Copy constructor
+        public GameCanvas(GameCanvas canvasToCopy, bool skipChildren = false)
         {
-            _gridCanvas = new Canvas(canvasToCopy._gridCanvas);
+            _gridCanvas = new Canvas();
+            _gridCanvas.Width = canvasToCopy.Width;
+            _gridCanvas.Height = canvasToCopy.Height;
+            _gridCanvas.Background = canvasToCopy._gridCanvas.Background.Clone();
+
+            if (!skipChildren)
+            {
+                foreach (var child in canvasToCopy._gridCanvas.Children)
+                {
+                    object element;
+                    string childXaml = XamlWriter.Save(child);
+                    StringReader stringReader = new StringReader(childXaml);
+                    XmlReader xmlReader = XmlReader.Create(stringReader);
+
+                    if (child is Rectangle)
+                    {
+                        element = (Rectangle)XamlReader.Load(xmlReader);
+                        _gridCanvas.Children.Add((Rectangle)element);
+                    }
+                    else
+                    {
+                        continue; //Skip child if it's not Rectangle
+                    }
+                }
+            }
         }
 
         public Canvas GridCanvas

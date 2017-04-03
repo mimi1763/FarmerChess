@@ -36,12 +36,23 @@ namespace Farmerchess.Gui
             InitCellGrid();
         }
 
+        //Copy constructor
         public Board(Board boardToCopy)
         {
+            Width = boardToCopy.Width;
+            Height = boardToCopy.Height;
             BlockCountX = boardToCopy.BlockCountX;
             BlockCountY = boardToCopy.BlockCountY;
             BlockSize = boardToCopy.BlockSize;
-            _canvas = new GameCanvas(boardToCopy.Canvas);
+            _canvas = new GameCanvas(boardToCopy.Canvas, true);
+            _cellGrid = new Cell[BlockCountX, BlockCountY];
+            for (var y = 0; y < BlockCountY; y++)
+            {
+                for (var x = 0; x < BlockCountX; x++)
+                {
+                    _cellGrid[x, y] = new Cell(boardToCopy._cellGrid[x, y]);
+                }
+            }
         }
 
         private void InitGui()

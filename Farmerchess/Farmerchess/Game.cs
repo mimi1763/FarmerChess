@@ -4,9 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace Farmerchess
 {
@@ -17,6 +19,7 @@ namespace Farmerchess
         List<IPlayer> _players;
         Board _board;
         private bool _isDebug;
+        DebugWindow _debugWindow;
 
         public List<GameCanvas> CanvasList { get; private set; }
 
@@ -104,10 +107,12 @@ namespace Farmerchess
 
                 if (_isDebug)
                 {
-                    Console.WriteLine(cell.Id);
-                    Console.WriteLine(_players[player - 1].Grid.ToString());
-                    var array = _players[player - 1].Grid.GetSlashDiagArray(cell.Id);
-                    Console.WriteLine(_players[player - 1].Grid.PrintArray(array));
+                    ChangeDebugWindowCell(cell.GridX, cell.GridY);
+
+                    //LogToDebugWindow(cell.Id.ToString());
+                    //LogToDebugWindow(_players[player - 1].Grid.ToString());
+                    //var array = _players[player - 1].Grid.GetSlashDiagArray(cell.Id);
+                    //LogToDebugWindow(_players[player - 1].Grid.PrintArray(array));
                 }
 
                 ChangeTurn();
@@ -116,7 +121,54 @@ namespace Farmerchess
 
         private void InitDebugWindow()
         {
-            var debugBoard = new Board(_board);
+            _debugWindow = new DebugWindow(_board);
+            _debugWindow.Width = 600;
+            _debugWindow.Height = 600;
+            _debugWindow.Show();
+        }
+
+        public void LogToDebugWindow(string text)
+        {
+            _debugWindow.AddString(text);            
+        }
+
+        public void ChangeDebugWindowCell(int posx, int posy)
+        {
+            _debugWindow.ChangeBoardCell(posx, posy);
+        }
+
+        class DebugWindow : Window
+        {
+            StackPanel _panel;
+            Board _debugBoard;
+
+            public DebugWindow()
+            {
+                ScrollViewer scroller = new ScrollViewer();
+                scroller.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+                _panel = new StackPanel();
+                scroller.Content = _panel;
+                this.Content = scroller;
+            }
+
+            public DebugWindow(Board board)
+            {
+                _debugBoard = new Board(board);
+                this.Content = _debugBoard;
+            }
+
+            public void AddString(string text)
+            {
+                var label = new Label();
+                label.Content = text;
+                _panel.Children.Add(label);
+            }
+
+            public void ChangeBoardCell(int posx, int posy)
+            {
+                Cell cell = _debugBoard.GetCell(posx, posy, 0);
+                _debugBoard.DrawCell(cell);
+            }
         }
     }
 }

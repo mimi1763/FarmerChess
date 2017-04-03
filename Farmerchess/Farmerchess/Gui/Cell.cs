@@ -19,6 +19,26 @@ namespace Farmerchess.Gui
             Id = id;
         }
 
+        public Cell(Cell cell)
+        {
+            PosX = cell.PosX;
+            PosY = cell.PosY;
+            Value = cell.Value;
+            Id = cell.Id;
+            GridX = cell.GridX;
+            GridY = cell.GridY;
+            RectGeo = cell.RectGeo.Clone();
+            var recta = new Rect();
+            recta.X = cell.Rectangle.X;
+            recta.Y = cell.Rectangle.Y;
+            recta.Width = cell.Rectangle.Width;
+            recta.Height = cell.Rectangle.Height;
+            Rectangle = recta;
+            var imgRect = new Rectangle();
+            imgRect.
+
+        }
+
         public int Value { get; set; }
         public int PosX { get; set; }
         public int PosY { get; set; }
