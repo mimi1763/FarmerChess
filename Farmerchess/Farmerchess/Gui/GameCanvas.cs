@@ -49,15 +49,14 @@ namespace Farmerchess.Gui
             {
                 foreach (var child in canvasToCopy._gridCanvas.Children)
                 {
-                    object element;
                     string childXaml = XamlWriter.Save(child);
                     StringReader stringReader = new StringReader(childXaml);
                     XmlReader xmlReader = XmlReader.Create(stringReader);
 
                     if (child is Rectangle)
                     {
-                        element = (Rectangle)XamlReader.Load(xmlReader);
-                        _gridCanvas.Children.Add((Rectangle)element);
+                        Rectangle rectangle = (Rectangle)XamlReader.Load(xmlReader);
+                        _gridCanvas.Children.Add(rectangle);
                     }
                     else
                     {

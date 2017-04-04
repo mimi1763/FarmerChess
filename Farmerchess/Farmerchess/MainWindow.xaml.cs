@@ -25,7 +25,7 @@ namespace Farmerchess
         private void InitGame()
         {           
             _game = new Game();
-            this.Content = _game.CanvasList[0];
+            this.Content = _game.BoardList[0].Canvas;
             this.Width = _game.GameWindowSize.Width;
             this.Height = _game.GameWindowSize.Height;
         }

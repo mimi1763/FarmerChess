@@ -21,7 +21,7 @@ namespace Farmerchess
         private bool _isDebug;
         DebugWindow _debugWindow;
 
-        public List<GameCanvas> CanvasList { get; private set; }
+        public List<Board> BoardList { get; private set; }
 
         public Size GameWindowSize { get { return _board.GetWindowSize(); } }
 
@@ -38,6 +38,8 @@ namespace Farmerchess
             {
                 InitDebugWindow();
             }
+
+            DrawBoards();
         }
 
         private void InitGame()
@@ -45,9 +47,16 @@ namespace Farmerchess
             var useTestGrid = (int)Tools.Instance.ReadSetting(Tools.Instance.SettingsKey_UseTestGrid);
             InitGui(useTestGrid > 0);
             InitPlayerGrids(useTestGrid > 0);
-            CanvasList = new List<GameCanvas>();
-            CanvasList.Add(_board.Canvas);
-            _board.Draw();
+            BoardList = new List<Board>();
+            BoardList.Add(_board);
+        }
+
+        private void DrawBoards()
+        {
+            foreach (var board in BoardList)
+            {
+                board.Draw();
+            }
         }
 
         private Tools.Player SwapPlayer(Tools.Player lastPlayer)
@@ -107,7 +116,7 @@ namespace Farmerchess
 
                 if (_isDebug)
                 {
-                    ChangeDebugWindowCell(cell.GridX, cell.GridY);
+                    ChangeDebugWindowCell(cell.Id);
 
                     //LogToDebugWindow(cell.Id.ToString());
                     //LogToDebugWindow(_players[player - 1].Grid.ToString());
@@ -122,9 +131,11 @@ namespace Farmerchess
         private void InitDebugWindow()
         {
             _debugWindow = new DebugWindow(_board);
-            _debugWindow.Width = 600;
-            _debugWindow.Height = 600;
+            _debugWindow.Width = _board.Width;
+            _debugWindow.Height = _board.Height;
+            _debugWindow.DrawBoard();
             _debugWindow.Show();
+
         }
 
         public void LogToDebugWindow(string text)
@@ -132,9 +143,9 @@ namespace Farmerchess
             _debugWindow.AddString(text);            
         }
 
-        public void ChangeDebugWindowCell(int posx, int posy)
+        public void ChangeDebugWindowCell(int id)
         {
-            _debugWindow.ChangeBoardCell(posx, posy);
+            _debugWindow.ChangeBoardCell(id);
         }
 
         class DebugWindow : Window
@@ -148,13 +159,19 @@ namespace Farmerchess
                 scroller.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
                 _panel = new StackPanel();
                 scroller.Content = _panel;
-                this.Content = scroller;
+                Init(scroller);
             }
 
             public DebugWindow(Board board)
             {
                 _debugBoard = new Board(board);
-                this.Content = _debugBoard;
+                Init(_debugBoard.Canvas);
+            }
+
+            private void Init(UIElement content)
+            {
+                this.Content = content;
+                this.Title = "Debug Window";
             }
 
             public void AddString(string text)
@@ -164,10 +181,15 @@ namespace Farmerchess
                 _panel.Children.Add(label);
             }
 
-            public void ChangeBoardCell(int posx, int posy)
+            public void ChangeBoardCell(int id)
             {
-                Cell cell = _debugBoard.GetCell(posx, posy, 0);
+                Cell cell = _debugBoard.GetCell(id, 1);
                 _debugBoard.DrawCell(cell);
+            }
+
+            public void DrawBoard()
+            {
+                _debugBoard.Draw();
             }
         }
     }

@@ -107,7 +107,7 @@ namespace Farmerchess
         {
             try
             {
-                var isNumber = key.Contains("nbr");
+                var isNumber = key.StartsWith("nbr");
                 var appSettings = ConfigurationManager.AppSettings;
                 var value = appSettings[key];
                 if (isNumber)

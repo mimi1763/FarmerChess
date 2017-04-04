@@ -39,20 +39,19 @@ namespace Farmerchess.Gui
         //Copy constructor
         public Board(Board boardToCopy)
         {
-            Width = boardToCopy.Width;
-            Height = boardToCopy.Height;
             BlockCountX = boardToCopy.BlockCountX;
             BlockCountY = boardToCopy.BlockCountY;
             BlockSize = boardToCopy.BlockSize;
-            _canvas = new GameCanvas(boardToCopy.Canvas, true);
-            _cellGrid = new Cell[BlockCountX, BlockCountY];
-            for (var y = 0; y < BlockCountY; y++)
-            {
-                for (var x = 0; x < BlockCountX; x++)
-                {
-                    _cellGrid[x, y] = new Cell(boardToCopy._cellGrid[x, y]);
-                }
-            }
+            InitGui();
+            InitCellGrid();
+            //_cellGrid = new Cell[BlockCountX, BlockCountY];
+            //for (var y = 0; y < BlockCountY; y++)
+            //{
+            //    for (var x = 0; x < BlockCountX; x++)
+            //    {
+            //        _cellGrid[x, y] = new Cell(boardToCopy._cellGrid[x, y]);
+            //    }
+            //}
         }
 
         private void InitGui()
@@ -77,7 +76,7 @@ namespace Farmerchess.Gui
                 {
                     id = y * BlockCountX + x;
                     _cellGrid[x, y] = new Cell(x * BlockSize, y * BlockSize, (int)piece, id);
-                    _cellGrid[x, y].ImgRectangle = new Rectangle();
+                    //_cellGrid[x, y].ImgRectangle = new Rectangle();
                     _cellGrid[x, y].Rectangle = new Rect(_cellGrid[x, y].PosX, _cellGrid[x, y].PosY, BlockSize, BlockSize);
                     _cellGrid[x, y].RectGeo = new RectangleGeometry(_cellGrid[x, y].Rectangle);
                 }
@@ -159,22 +158,40 @@ namespace Farmerchess.Gui
         /// <returns></returns>
         public Cell GetCell(int posx, int posy, int value = -1)
         {
-            for (var y = 0; y < BlockCountY; y++)
+            int sx = posx / BlockSize;
+            int sy = posy / BlockSize;
+
+            for (var y = sy; y < BlockCountY; y++)
             {
-                for (var x = 0; x < BlockCountX; x++)
+                for (var x = sx; x < BlockCountX; x++)
                 {
                     if (posx > _cellGrid[x, y].PosX && posx < _cellGrid[x, y].PosX + BlockSize &&
                         posy > _cellGrid[x, y].PosY && posy < _cellGrid[x, y].PosY + BlockSize)
                     {
-                        if (value > -1)
-                        {
-                            _cellGrid[x, y].Value = Math.Abs(value - _cellGrid[x, y].Value);
-                        }
-                        return _cellGrid[x, y];
+                        return GetCellAtGridPos(x, y, value);
                     }
                 }
             }
             return null;
+        }
+
+        public Cell GetCell(int id, int value = -1)
+        {
+            int x = id % BlockCountX;
+            int y = id / BlockCountY;
+            return GetCellAtGridPos(x, y, value);
+        }
+
+        private Cell GetCellAtGridPos(int x, int y, int value)
+        {
+            if (value > -1)
+            {
+                _cellGrid[x, y].Value = Math.Abs(value - _cellGrid[x, y].Value);
+            }
+            _cellGrid[x, y].GridX = x;
+            _cellGrid[x, y].GridY = y;
+
+            return _cellGrid[x, y];
         }
     }
 }

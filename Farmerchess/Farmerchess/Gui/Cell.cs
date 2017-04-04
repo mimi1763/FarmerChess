@@ -34,8 +34,7 @@ namespace Farmerchess.Gui
             recta.Width = cell.Rectangle.Width;
             recta.Height = cell.Rectangle.Height;
             Rectangle = recta;
-            var imgRect = new Rectangle();
-            imgRect.
+            //var imgRect = new Rectangle();
 
         }
 
@@ -43,12 +42,12 @@ namespace Farmerchess.Gui
         public int PosX { get; set; }
         public int PosY { get; set; }
         public int Id { get; set; }
-        public int GridX { get; private set; }
-        public int GridY { get; private set; }
+        public int GridX { get; set; }
+        public int GridY { get; set; }
 
         public RectangleGeometry RectGeo { get; set; }
         public Rect Rectangle { get; set; }
-        public Rectangle ImgRectangle { get; set; }
-        public ImageSource Image { get; set; }
+
+        //public Rectangle ImgRectangle { get; set; }
     }
 }
