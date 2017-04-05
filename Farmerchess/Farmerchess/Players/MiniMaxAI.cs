@@ -9,7 +9,7 @@ namespace Farmerchess.Players
 {
     class MiniMaxAI : IPlayer
     {
-        public Tools.Player Colour
+        public Tools.Player PlayerKind
         {
             get; private set;
         }

@@ -10,10 +10,10 @@ namespace Farmerchess
     {
         void SetCell(int pos, bool value);
         bool GetCell(int pos);
-        bool[] GetRowArray(int pos);
-        bool[] GetColumnArray(int pos);
-        bool[] GetSlashDiagArray(int pos);
-        bool[] GetBackSlashDiagArray(int pos);
+        BoolGrid GetRowArray(int pos);
+        BoolGrid GetColumnArray(int pos);
+        BoolGrid GetSlashDiagArray(int pos);
+        BoolGrid GetBackSlashDiagArray(int pos);
         void ConvertFromIntArray(int[,] intArray);
         string PrintArray(bool[] array);
     }

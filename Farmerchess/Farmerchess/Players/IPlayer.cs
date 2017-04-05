@@ -8,7 +8,7 @@ namespace Farmerchess.Players
 {
     interface IPlayer
     {
-        Tools.Player Colour { get; }
+        Tools.Player PlayerKind { get; }
         IPlayerGrid Grid { get; set; }
         void Move();
     }

@@ -99,8 +99,8 @@ namespace Farmerchess
 
             if (useTestGrid)
             {
-                _players[0].Grid.ConvertFromIntArray(_players[0].Colour == Tools.Player.O ? Tools.Instance.TestGridO : Tools.Instance.TestGridX);
-                _players[1].Grid.ConvertFromIntArray(_players[1].Colour == Tools.Player.X ? Tools.Instance.TestGridX : Tools.Instance.TestGridO);
+                _players[0].Grid.ConvertFromIntArray(_players[0].PlayerKind == Tools.Player.O ? Tools.Instance.TestGridO : Tools.Instance.TestGridX);
+                _players[1].Grid.ConvertFromIntArray(_players[1].PlayerKind == Tools.Player.X ? Tools.Instance.TestGridX : Tools.Instance.TestGridO);
             }
         }
 
@@ -116,8 +116,14 @@ namespace Farmerchess
 
                 if (_isDebug)
                 {
-                    ChangeDebugWindowCell(cell.Id);
+                    //Draw rows connected to current cell.
+                    var array = _players[player - 1].Grid.GetSlashDiagArray(cell.Id);
+                    DrawGridInDebugWindow(array);
 
+                    //Draw current cell only.
+                    //ChangeDebugWindowCell(cell.Id);
+
+                    //Text debug:
                     //LogToDebugWindow(cell.Id.ToString());
                     //LogToDebugWindow(_players[player - 1].Grid.ToString());
                     //var array = _players[player - 1].Grid.GetSlashDiagArray(cell.Id);
@@ -143,9 +149,22 @@ namespace Farmerchess
             _debugWindow.AddString(text);            
         }
 
+        public void DrawGridInDebugWindow(BoolGrid grid)
+        {
+            _debugWindow.DrawBoard(grid);
+        }
+
         public void ChangeDebugWindowCell(int id)
         {
             _debugWindow.ChangeBoardCell(id);
+        }
+
+        public void CloseDebugWindow()
+        {
+            if (_debugWindow.IsLoaded)
+            {
+                _debugWindow.Close();
+            }
         }
 
         class DebugWindow : Window
@@ -168,6 +187,8 @@ namespace Farmerchess
                 Init(_debugBoard.Canvas);
             }
 
+            public Size WindowSize { get { return _debugBoard.GetWindowSize(); } }
+
             private void Init(UIElement content)
             {
                 this.Content = content;
@@ -184,12 +205,13 @@ namespace Farmerchess
             public void ChangeBoardCell(int id)
             {
                 Cell cell = _debugBoard.GetCell(id, 1);
-                _debugBoard.DrawCell(cell);
+                _debugBoard.DrawCell(cell, true);
             }
 
-            public void DrawBoard()
+            public void DrawBoard(BoolGrid grid = null)
             {
-                _debugBoard.Draw();
+                _debugBoard.Draw(grid);
+                //_debugBoard.DrawIndeces();
             }
         }
     }

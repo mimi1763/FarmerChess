@@ -255,22 +255,22 @@ namespace Farmerchess
             return null;
         }
 
-        public bool[] GetRowArray(int pos)
+        public BoolGrid GetRowArray(int pos)
         {
             return null;
         }
 
-        public bool[] GetColumnArray(int pos)
+        public BoolGrid GetColumnArray(int pos)
         {
             return null;
         }
 
-        public bool[] GetSlashDiagArray(int pos)
+        public BoolGrid GetSlashDiagArray(int pos)
         {
             return null;
         }
 
-        public bool[] GetBackSlashDiagArray(int pos)
+        public BoolGrid GetBackSlashDiagArray(int pos)
         {
             return null;
         }

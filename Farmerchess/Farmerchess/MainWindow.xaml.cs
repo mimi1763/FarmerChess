@@ -4,6 +4,7 @@ using System.Windows.Input;
 using System;
 using System.Diagnostics;
 using System.Numerics;
+using System.ComponentModel;
 
 namespace Farmerchess
 {
@@ -28,11 +29,17 @@ namespace Farmerchess
             this.Content = _game.BoardList[0].Canvas;
             this.Width = _game.GameWindowSize.Width;
             this.Height = _game.GameWindowSize.Height;
+            this.Closing += OnWindowClose;
         }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             _game.ChangeCellAtMousePos(e.MouseDevice);
+        }
+
+        public void OnWindowClose(object sender, CancelEventArgs e)
+        {
+            _game.CloseDebugWindow();
         }
     }
 }

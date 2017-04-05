@@ -10,9 +10,9 @@ namespace Farmerchess.Players
     {
         public Human (Tools.Player colour)
         {
-            Colour = colour;
+            PlayerKind = colour;
         }
-        public Tools.Player Colour
+        public Tools.Player PlayerKind
         {
             get; private set;
         }

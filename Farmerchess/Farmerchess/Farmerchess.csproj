@@ -58,6 +58,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BitLine.cs" />
+    <Compile Include="BoolGrid.cs" />
     <Compile Include="FieldGrid.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="BitGrid.cs" />

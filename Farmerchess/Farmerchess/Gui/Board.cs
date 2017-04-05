@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
 namespace Farmerchess.Gui
@@ -44,14 +45,6 @@ namespace Farmerchess.Gui
             BlockSize = boardToCopy.BlockSize;
             InitGui();
             InitCellGrid();
-            //_cellGrid = new Cell[BlockCountX, BlockCountY];
-            //for (var y = 0; y < BlockCountY; y++)
-            //{
-            //    for (var x = 0; x < BlockCountX; x++)
-            //    {
-            //        _cellGrid[x, y] = new Cell(boardToCopy._cellGrid[x, y]);
-            //    }
-            //}
         }
 
         private void InitGui()
@@ -65,18 +58,25 @@ namespace Farmerchess.Gui
             //_canvas.Complete();
         }
 
-        private void InitCellGrid()
+        private void InitCellGrid(BoolGrid grid = null)
         {
             _cellGrid = new Cell[BlockCountX, BlockCountY];
             int id = 0;
-            var piece = Tools.Player.Empty;
+            var pE = Tools.Player.Empty;
+            var pX = Tools.Player.X;
+            var pO = Tools.Player.O;
+            var piece = pE;
+            var lastIndex = BlockCountX * BlockCountX - 1;
             for (var y = 0; y < BlockCountY; y++)
             {
                 for (var x = 0; x < BlockCountX; x++)
                 {
-                    id = y * BlockCountX + x;
+                    id = y * BlockCountY + x;
+                    if (grid != null)
+                    {
+                        piece = grid.Grid[x, y] ? pX : pE;
+                    }
                     _cellGrid[x, y] = new Cell(x * BlockSize, y * BlockSize, (int)piece, id);
-                    //_cellGrid[x, y].ImgRectangle = new Rectangle();
                     _cellGrid[x, y].Rectangle = new Rect(_cellGrid[x, y].PosX, _cellGrid[x, y].PosY, BlockSize, BlockSize);
                     _cellGrid[x, y].RectGeo = new RectangleGeometry(_cellGrid[x, y].Rectangle);
                 }
@@ -112,8 +112,12 @@ namespace Farmerchess.Gui
         /// <summary>
         /// Draw entire board 
         /// </summary>
-        public void Draw()
+        public void Draw(BoolGrid grid = null)
         {
+            if (grid != null)
+            {
+                InitCellGrid(grid);
+            }
             for (int y = 0; y < BlockCountY; y++)
             {
                 for (int x = 0; x < BlockCountX; x++)
@@ -123,11 +127,32 @@ namespace Farmerchess.Gui
             }
         }
 
+        public void DrawIndeces()
+        {
+            for (int y = 0; y < BlockCountY; y++)
+            {
+                for (int x = 0; x < BlockCountX; x++)
+                {
+                    DrawCell(_cellGrid[x, y], false, true);
+                }
+            }
+        }
+
+        public void DrawCell(Cell cell, bool isDebug = false)
+        {
+            DrawGridCell(cell, isDebug, false);
+        }
+
+        public void DrawCell(Cell cell, bool isDebug, bool drawIndex)
+        {
+            DrawGridCell(cell, isDebug, drawIndex);
+        }
+
         /// <summary>
         /// Draw single cell
         /// </summary>
         /// <param name="cell"></param>
-        public void DrawCell(Cell cell)
+        private void DrawGridCell(Cell cell, bool isDebug, bool drawIndex)
         {
             var value = cell != null ? cell.Value : 0;
             var id = 0;
@@ -138,9 +163,25 @@ namespace Farmerchess.Gui
             var imgRect = (Rectangle)Canvas.GetGridChild(id);
             if (cell != null)
             {
-                if (value > 0)
+                if (drawIndex)
                 {
-                    imgRect.Fill = Tools.Instance.GetImageBrush(value);
+                    TextBlock textBlock = new TextBlock();
+                    textBlock.Foreground = Brushes.Black;
+                    textBlock.Text = cell.Id.ToString();
+                    VisualBrush visBrush = new VisualBrush();
+                    visBrush.Visual = textBlock;
+                    imgRect.Fill = visBrush;
+                }
+                else if (value > 0)
+                {
+                    if (!isDebug)
+                    {
+                        imgRect.Fill = Tools.Instance.GetImageBrush(value);
+                    } 
+                    else
+                    {
+                        imgRect.Fill = Brushes.Teal;
+                    }               
                 }
                 else
                 {

@@ -9,8 +9,19 @@ using System.Windows.Shapes;
 
 namespace Farmerchess.Gui
 {
-    class Cell
+    public class Cell
     {
+        public int Value { get; set; }
+        public int PosX { get; set; }
+        public int PosY { get; set; }
+        public int Id { get; set; }
+        public int GridX { get; set; }
+        public int GridY { get; set; }
+        public RectangleGeometry RectGeo { get; set; }
+        public Rect Rectangle { get; set; }
+
+        //public Rectangle ImgRectangle { get; set; }
+
         public Cell(int posx, int posy, int value, int id)
         {
             PosX = posx;
@@ -19,6 +30,7 @@ namespace Farmerchess.Gui
             Id = id;
         }
 
+        //Copy constructor
         public Cell(Cell cell)
         {
             PosX = cell.PosX;
@@ -35,19 +47,6 @@ namespace Farmerchess.Gui
             recta.Height = cell.Rectangle.Height;
             Rectangle = recta;
             //var imgRect = new Rectangle();
-
         }
-
-        public int Value { get; set; }
-        public int PosX { get; set; }
-        public int PosY { get; set; }
-        public int Id { get; set; }
-        public int GridX { get; set; }
-        public int GridY { get; set; }
-
-        public RectangleGeometry RectGeo { get; set; }
-        public Rect Rectangle { get; set; }
-
-        //public Rectangle ImgRectangle { get; set; }
     }
 }
