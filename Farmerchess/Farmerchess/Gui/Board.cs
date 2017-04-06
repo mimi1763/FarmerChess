@@ -185,7 +185,7 @@ namespace Farmerchess.Gui
                 }
                 else
                 {
-                    imgRect.Fill = Brushes.Transparent;
+                    //imgRect.Fill = Brushes.Transparent;
                 }
             }
         }

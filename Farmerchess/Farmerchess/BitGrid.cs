@@ -255,23 +255,27 @@ namespace Farmerchess
             return null;
         }
 
-        public BoolGrid GetRowArray(int pos)
+        public BoolGrid GetRowArray(int pos, out int maxInARow)
         {
+            maxInARow = 0;
             return null;
         }
 
-        public BoolGrid GetColumnArray(int pos)
+        public BoolGrid GetColumnArray(int pos, out int maxInARow)
         {
+            maxInARow = 0;
             return null;
         }
 
-        public BoolGrid GetSlashDiagArray(int pos)
+        public BoolGrid GetSlashDiagArray(int pos, out int maxInARow)
         {
+            maxInARow = 0;
             return null;
         }
 
-        public BoolGrid GetBackSlashDiagArray(int pos)
+        public BoolGrid GetBackSlashDiagArray(int pos, out int maxInARow)
         {
+            maxInARow = 0;
             return null;
         }
 

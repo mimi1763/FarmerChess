@@ -117,7 +117,9 @@ namespace Farmerchess
                 if (_isDebug)
                 {
                     //Draw rows connected to current cell.
-                    var array = _players[player - 1].Grid.GetSlashDiagArray(cell.Id);
+                    int maxInARow = 0;
+                    var array = _players[player - 1].Grid.GetSlashDiagArray(cell.Id, out maxInARow);
+                    Console.WriteLine("max in a row: " + maxInARow);
                     DrawGridInDebugWindow(array);
 
                     //Draw current cell only.
@@ -210,8 +212,8 @@ namespace Farmerchess
 
             public void DrawBoard(BoolGrid grid = null)
             {
+                _debugBoard.DrawIndeces();
                 _debugBoard.Draw(grid);
-                //_debugBoard.DrawIndeces();
             }
         }
     }

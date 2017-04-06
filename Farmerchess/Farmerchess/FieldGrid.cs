@@ -28,28 +28,40 @@ namespace Farmerchess
             return _grid[pos];
         }
 
-        public BoolGrid GetRowArray(int pos)
+        public BoolGrid GetRowArray(int pos, out int maxInARow)
         {
             int row = GetRow(pos);
-            bool[] rowArray = new bool[Size];
+            bool[] rowArray = new bool[Size * Size];
             int startPos = row * Size;
-            int index = 0;
+            bool hasFound = false;
+            int inARow = 0;
+            maxInARow = inARow;
             for (int x = startPos; x < startPos + (Size - 1); x++)
             {
-                rowArray[index++] = _grid[x];
+                if (hasFound && !_grid[x]) break; //Jump out if next cell after row of filled is empty.
+                hasFound = _grid[x];
+                rowArray[x] = _grid[x];
+                inARow = hasFound ? inARow + 1 : 0;
+                maxInARow = inARow > maxInARow ? inARow : maxInARow;
             }
 
             return ConvertBoolArrayToBoolGrid(rowArray);
         }
 
-        public BoolGrid GetColumnArray(int pos)
+        public BoolGrid GetColumnArray(int pos, out int maxInARow)
         {
             int column = GetColumn(pos);
-            bool[] columnArray = new bool[Size];
-            int index = 0;
+            bool[] columnArray = new bool[Size * Size];
+            bool hasFound = false;
+            int inARow = 0;
+            maxInARow = inARow;
             for (int y = column; y < _grid.Length - (Size - column); y += Size)
             {
-                columnArray[index++] = _grid[y];
+                if (hasFound && !_grid[y]) break; //Jump out if next cell after row of filled is empty.
+                hasFound = _grid[y];
+                columnArray[y] = _grid[y];
+                inARow = hasFound ? inARow + 1 : 0;
+                maxInARow = inARow > maxInARow ? inARow : maxInARow;
             }
 
             return ConvertBoolArrayToBoolGrid(columnArray);
@@ -70,53 +82,52 @@ namespace Farmerchess
 
                 0  1  2  3  4  5  6  7  8  9 Column
         */
-        public BoolGrid GetSlashDiagArray(int pos)
+        public BoolGrid GetSlashDiagArray(int pos, out int maxInARow)
         {
             bool[] diagArray = new bool[Size * Size];
-            var startPos = pos;
-            var rows = GetRow(pos) - 1;
-            for (var x = GetColumn(pos) + 1; x < Size; x++)
+            var step = Size - 1;
+            var start = pos - Math.Min(Size - (GetColumn(pos) + 1), GetRow(pos)) * step; //Find min startPos for use as limit.
+            int tester = pos - step; //Start one step before pos.
+            if (tester < pos)
             {
-                if (rows-- >= 0)
-                {
-                    startPos -= (Size - 1);
-                }
-                else
-                {
-                    break;
-                }
+                tester = pos; // start can never be less than pos.
             }
+            int startPos = tester;
+            while (tester >= start)
+            {
+                startPos = tester; //Set startPos one step before as long as cell is filled.
+                if (!_grid[tester]) break; //If one step before is empty, exit.
+                tester -= step;
+            }
+            //Console.WriteLine(" pos: {0} - startPos: {1}", pos, startPos);
             bool hasFound = false;
-            for (int i = startPos; i < _grid.Length; i += (Size - 1))
+            int inARow = 0;
+            maxInARow = inARow;
+            for (int i = startPos; i < _grid.Length; i += step)
             {
                 if (hasFound && !_grid[i]) break; //Jump out if next cell after row of filled is empty.
                 hasFound = _grid[i];
+                inARow = hasFound ? inARow + 1 : 0;
+                maxInARow = inARow > maxInARow ? inARow : maxInARow;
                 diagArray[i] = _grid[i];
             }
 
             return ConvertBoolArrayToBoolGrid(diagArray);
         }
 
-        public BoolGrid GetBackSlashDiagArray(int pos)
+        public BoolGrid GetBackSlashDiagArray(int pos, out int maxInARow)
         {
             bool[] diagArray = new bool[Size * Size];
-            var startPos = pos;
-            var rows = GetRow(pos) - 1;
-            for (var x = GetColumn(pos) - 1; x >= 0; x--)
-            {
-                if (rows-- >= 0)
-                {
-                    startPos -= (Size + 1);
-                }
-                else
-                {
-                    break;
-                }
-            }
+            var startPos = pos - Math.Min(GetColumn(pos), GetRow(pos)) * (Size + 1);           
             bool hasFound = false;
+            int inARow = 0;
+            maxInARow = inARow;
             for (int i = startPos; i < _grid.Length; i += (Size + 1))
             {
                 if (hasFound && !_grid[i]) break; //Jump out if next cell after row of filled is empty.
+                hasFound = _grid[i];
+                inARow = hasFound ? inARow + 1 : 0;
+                maxInARow = inARow > maxInARow ? inARow : maxInARow;
                 diagArray[i] = _grid[i];
             }
 
