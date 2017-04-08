@@ -107,32 +107,31 @@ namespace Farmerchess
         public void ChangeCellAtMousePos(MouseDevice mouse)
         {
             Point position = mouse.GetPosition(_board.Canvas);
-            int player = Turn == Tools.Player.X ? (int)Tools.Player.X : (int)Tools.Player.O;
+            ChangeTurn();
+            int player = (int)Turn;
             var cell = _board.GetCell((int)position.X, (int)position.Y, player);
             if (cell != null)
             {
-                _players[player - 1].Grid.SetCell(cell.Id, true);
-                _board.DrawCell(cell);
+                DoPlayerTurn(player, cell);
+            }
+        }
 
-                if (_isDebug)
-                {
-                    //Draw rows connected to current cell.
-                    int maxInARow = 0;
-                    var array = _players[player - 1].Grid.GetSlashDiagArray(cell.Id, out maxInARow);
-                    Console.WriteLine("max in a row: " + maxInARow);
-                    DrawGridInDebugWindow(array);
+        private void DoPlayerTurn(int player, Cell cell)
+        {
+            _players[player - 1].Grid.SetCell(cell.Id, true);
+            _board.DrawCell(cell);
 
-                    //Draw current cell only.
-                    //ChangeDebugWindowCell(cell.Id);
+            if (_isDebug)
+            {
+                //Draw rows connected to current cell.
+                int maxInARow = 0;
+                bool isOpen = false;
+                var array = _players[player - 1].Grid.GetAllArrays(cell.Id, out maxInARow, out isOpen);
+                Console.WriteLine("player: {0} - max in a row: {1}", Turn, maxInARow);
+                DrawGridInDebugWindow(array);
 
-                    //Text debug:
-                    //LogToDebugWindow(cell.Id.ToString());
-                    //LogToDebugWindow(_players[player - 1].Grid.ToString());
-                    //var array = _players[player - 1].Grid.GetSlashDiagArray(cell.Id);
-                    //LogToDebugWindow(_players[player - 1].Grid.PrintArray(array));
-                }
-
-                ChangeTurn();
+                //Draw current cell only.
+                //ChangeDebugWindowCell(cell.Id);
             }
         }
 

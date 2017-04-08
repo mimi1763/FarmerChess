@@ -127,6 +127,14 @@ namespace Farmerchess
             Twenty = 524288
         }
 
+        public enum RowDir
+        {
+            Row,
+            Column,
+            Diag,
+            BackSlashDiag
+        }
+
         private BigInteger _bitGrid;
 
         private BitArray _bitArray;
@@ -255,28 +263,44 @@ namespace Farmerchess
             return null;
         }
 
-        public BoolGrid GetRowArray(int pos, out int maxInARow)
+        public BoolGrid GetRowArray(int pos, out int maxInARow, out bool isOpen)
         {
             maxInARow = 0;
+            isOpen = true;
             return null;
         }
 
-        public BoolGrid GetColumnArray(int pos, out int maxInARow)
+        public BoolGrid GetColumnArray(int pos, out int maxInARow, out bool isOpen)
         {
             maxInARow = 0;
+            isOpen = true;
             return null;
         }
 
-        public BoolGrid GetSlashDiagArray(int pos, out int maxInARow)
+        public BoolGrid GetSlashDiagArray(int pos, out int maxInARow, out bool isOpen)
         {
             maxInARow = 0;
+            isOpen = true;
             return null;
         }
 
-        public BoolGrid GetBackSlashDiagArray(int pos, out int maxInARow)
+        public BoolGrid GetBackSlashDiagArray(int pos, out int maxInARow, out bool isOpen)
         {
             maxInARow = 0;
+            isOpen = true;
             return null;
+        }
+
+        public BoolGrid GetAllArrays(int pos, out int maxInARow, out bool isOpen)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int GetMaxRowDirection(int pos, out int maxInARow)
+        {
+            maxInARow = 0;
+            RowDir rowDir = RowDir.Row;
+            return (int)rowDir;
         }
 
         public static int TestGridSize
