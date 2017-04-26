@@ -16,10 +16,11 @@ namespace Farmerchess
     {
         public static readonly int LEVELS = 4;
 
-        List<IPlayer> _players;
+        IPlayer[] _players;
         Board _board;
         private bool _isDebug;
         DebugWindow _debugWindow;
+        private MoveList _moveList;
 
         public List<Board> BoardList { get; private set; }
 
@@ -29,16 +30,25 @@ namespace Farmerchess
 
         public Game()
         {
-            _players = new List<IPlayer>();
-            _players.Add(new Human(Tools.Player.X));
-            _players.Add(new MiniMaxAI(Tools.Player.O));           
+            //Add players
+            _players = new IPlayer[2];
+            _players[0] = new Human(Tools.Player.X);
+            _players[1] = new MiniMaxAI(Tools.Player.O);
+
+            //Initialize movelist
+            _moveList = new MoveList();
+            
+            //Initialize game         
             InitGame();
+
+            //Setup debug window
             _isDebug = (int)Tools.Instance.ReadSetting(Tools.Instance.SettingsKey_DebugMode) == 1;
             if (_isDebug)
             {
                 InitDebugWindow();
             }
 
+            //Draw board windows
             DrawBoards();
         }
 
@@ -59,20 +69,14 @@ namespace Farmerchess
             }
         }
 
-        private Tools.Player SwapPlayer(Tools.Player lastPlayer)
-        {
-            return lastPlayer == Tools.Player.X ? Tools.Player.O : Tools.Player.X;
-        }
-
         public void ChangeTurn()
         {
-            Turn = SwapPlayer(Turn);
+            Turn = Turn == Tools.Player.X ? Tools.Player.O : Tools.Player.X;
         }
 
         private void InitGui(bool useTestGrid)
         {
-            int blocksX;
-            int blocksY;
+            int blocksX, blocksY;
             int blockSize = (int)Tools.Instance.ReadSetting(Tools.Instance.SettingsKey_BlockSize);
 
             if (useTestGrid)
@@ -124,12 +128,6 @@ namespace Farmerchess
 
                     //Draw current cell only.
                     //ChangeDebugWindowCell(cell.Id);
-
-                    //Text debug:
-                    //LogToDebugWindow(cell.Id.ToString());
-                    //LogToDebugWindow(_players[player - 1].Grid.ToString());
-                    //var array = _players[player - 1].Grid.GetSlashDiagArray(cell.Id);
-                    //LogToDebugWindow(_players[player - 1].Grid.PrintArray(array));
                 }
 
                 ChangeTurn();
