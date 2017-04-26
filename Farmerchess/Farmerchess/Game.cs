@@ -113,6 +113,7 @@ namespace Farmerchess
             Point position = mouse.GetPosition(_board.Canvas);
             int player = Turn == Tools.Player.X ? (int)Tools.Player.X : (int)Tools.Player.O;
             var cell = _board.GetCell((int)position.X, (int)position.Y, player);
+            var isOpen = false;
             if (cell != null)
             {
                 _players[player - 1].Grid.SetCell(cell.Id, true);
@@ -122,7 +123,7 @@ namespace Farmerchess
                 {
                     //Draw rows connected to current cell.
                     int maxInARow = 0;
-                    var array = _players[player - 1].Grid.GetSlashDiagArray(cell.Id, out maxInARow);
+                    var array = _players[player - 1].Grid.GetSlashDiagArray(cell.Id, out maxInARow, out isOpen);
                     Console.WriteLine("max in a row: " + maxInARow);
                     DrawGridInDebugWindow(array);
 

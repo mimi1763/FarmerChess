@@ -64,7 +64,6 @@ namespace Farmerchess.Gui
             int id = 0;
             var pE = Tools.Player.Empty;
             var pX = Tools.Player.X;
-            var pO = Tools.Player.O;
             var piece = pE;
             var lastIndex = BlockCountX * BlockCountX - 1;
             for (var y = 0; y < BlockCountY; y++)

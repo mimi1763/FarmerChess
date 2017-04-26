@@ -28,7 +28,42 @@ namespace Farmerchess
             return _grid[pos];
         }
 
-        public BoolGrid GetRowArray(int pos, out int maxInARow)
+        public enum RowDir
+        {
+            Row,
+            Column,
+            Diag,
+            BackSlashDiag
+        }
+
+        public int GetMaxRowDirection(int pos, out int maxInARow)
+        {
+            maxInARow = 0;
+            RowDir rowDir = RowDir.Row;
+            return (int)rowDir;
+        }
+
+        public BoolGrid GetAllArrays(int pos, out int maxInARow, out bool isOpen)
+        {
+            int inARow = 0;
+            maxInARow = inARow;
+            isOpen = true;
+            BoolGrid rowArray = GetRowArray(pos, out maxInARow, out isOpen);
+            inARow = maxInARow > inARow ? maxInARow : inARow;
+            BoolGrid columnArray = GetColumnArray(pos, out maxInARow, out isOpen);
+            inARow = maxInARow > inARow ? maxInARow : inARow;
+            BoolGrid diagArray = GetSlashDiagArray(pos, out maxInARow, out isOpen);
+            inARow = maxInARow > inARow ? maxInARow : inARow;
+            BoolGrid bsDiagArray = GetBackSlashDiagArray(pos, out maxInARow, out isOpen);
+            inARow = maxInARow > inARow ? maxInARow : inARow;
+
+            BoolGrid allArray = rowArray | columnArray | diagArray | bsDiagArray;
+            maxInARow = inARow;
+
+            return allArray;
+        }
+
+        public BoolGrid GetRowArray(int pos, out int maxInARow, out bool isOpen)
         {
             int row = GetRow(pos);
             bool[] rowArray = new bool[Size * Size];
@@ -45,10 +80,11 @@ namespace Farmerchess
                 maxInARow = inARow > maxInARow ? inARow : maxInARow;
             }
 
+            isOpen = true;
             return ConvertBoolArrayToBoolGrid(rowArray);
         }
 
-        public BoolGrid GetColumnArray(int pos, out int maxInARow)
+        public BoolGrid GetColumnArray(int pos, out int maxInARow, out bool isOpen)
         {
             int column = GetColumn(pos);
             bool[] columnArray = new bool[Size * Size];
@@ -64,6 +100,7 @@ namespace Farmerchess
                 maxInARow = inARow > maxInARow ? inARow : maxInARow;
             }
 
+            isOpen = true;
             return ConvertBoolArrayToBoolGrid(columnArray);
         }
 
@@ -82,7 +119,7 @@ namespace Farmerchess
 
                 0  1  2  3  4  5  6  7  8  9 Column
         */
-        public BoolGrid GetSlashDiagArray(int pos, out int maxInARow)
+        public BoolGrid GetSlashDiagArray(int pos, out int maxInARow, out bool isOpen)
         {
             bool[] diagArray = new bool[Size * Size];
             var step = Size - 1;
@@ -112,10 +149,11 @@ namespace Farmerchess
                 diagArray[i] = _grid[i];
             }
 
+            isOpen = true;
             return ConvertBoolArrayToBoolGrid(diagArray);
         }
 
-        public BoolGrid GetBackSlashDiagArray(int pos, out int maxInARow)
+        public BoolGrid GetBackSlashDiagArray(int pos, out int maxInARow, out bool isOpen)
         {
             bool[] diagArray = new bool[Size * Size];
             var startPos = pos - Math.Min(GetColumn(pos), GetRow(pos)) * (Size + 1);           
@@ -131,6 +169,7 @@ namespace Farmerchess
                 diagArray[i] = _grid[i];
             }
 
+            isOpen = true;
             return ConvertBoolArrayToBoolGrid(diagArray);
         }
 
