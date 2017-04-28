@@ -73,7 +73,7 @@ namespace Farmerchess
             maxInARow = inARow;
             for (int x = startPos; x < startPos + (Size - 1); x++)
             {
-                if (hasFound && !_grid[x]) break; //Jump out if next cell after row of filled is empty.
+                //if (hasFound && !_grid[x]) break; //Jump out if next cell after row of filled is empty.
                 hasFound = _grid[x];
                 rowArray[x] = _grid[x];
                 inARow = hasFound ? inARow + 1 : 0;
@@ -93,7 +93,7 @@ namespace Farmerchess
             maxInARow = inARow;
             for (int y = column; y < _grid.Length - (Size - column); y += Size)
             {
-                if (hasFound && !_grid[y]) break; //Jump out if next cell after row of filled is empty.
+                //if (hasFound && !_grid[y]) break; //Jump out if next cell after row of filled is empty.
                 hasFound = _grid[y];
                 columnArray[y] = _grid[y];
                 inARow = hasFound ? inARow + 1 : 0;
@@ -119,6 +119,60 @@ namespace Farmerchess
 
                 0  1  2  3  4  5  6  7  8  9 Column
         */
+
+        /// <summary>
+        /// Returns array of the three positions before and after given position,
+        /// based on type of row.
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public int[] GetPosArrayFromPosition(int pos, RowDir type)
+        {
+            var list = new List<int>();
+
+            if (type == RowDir.Row)
+            {
+                var rowNbr = GetRow(pos);
+                var minPos = rowNbr * Size;
+                var maxPos = minPos + Size - 1;
+                for (var i = -3; i < 4; i++ )
+                {
+                    var newPos = pos + i;
+                    if (i != 0 && newPos >= minPos && newPos <= maxPos)
+                    {
+                        list.Add(newPos);
+                    }
+                }
+            }
+            else if (type == RowDir.Column)
+            {
+                var colNbr = GetColumn(pos);
+                var maxPos = (Size - 1) * Size + colNbr;
+                for (var i = -3; i < 4; i++)
+                {
+                    var newPos = pos + (i * Size);
+                    if (i != 0 && newPos >= colNbr && newPos <= maxPos)
+                    {
+                        list.Add(newPos);
+                    }
+                }
+            }
+            else if (type == RowDir.Diag)
+            {
+                var rowNbr = GetRow(pos);
+                var colNbr = GetColumn(pos);
+
+
+            }
+            else //BackSlashDiag
+            {
+
+            }
+
+            return list.ToArray();
+        }
+
         public BoolGrid GetSlashDiagArray(int pos, out int maxInARow, out bool isOpen)
         {
             bool[] diagArray = new bool[Size * Size];
@@ -142,7 +196,7 @@ namespace Farmerchess
             maxInARow = inARow;
             for (int i = startPos; i < _grid.Length; i += step)
             {
-                if (hasFound && !_grid[i]) break; //Jump out if next cell after row of filled is empty.
+                //if (hasFound && !_grid[i]) break; //Jump out if next cell after row of filled is empty.
                 hasFound = _grid[i];
                 inARow = hasFound ? inARow + 1 : 0;
                 maxInARow = inARow > maxInARow ? inARow : maxInARow;
@@ -162,7 +216,7 @@ namespace Farmerchess
             maxInARow = inARow;
             for (int i = startPos; i < _grid.Length; i += (Size + 1))
             {
-                if (hasFound && !_grid[i]) break; //Jump out if next cell after row of filled is empty.
+                //if (hasFound && !_grid[i]) break; //Jump out if next cell after row of filled is empty.
                 hasFound = _grid[i];
                 inARow = hasFound ? inARow + 1 : 0;
                 maxInARow = inARow > maxInARow ? inARow : maxInARow;
